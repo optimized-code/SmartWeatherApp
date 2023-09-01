@@ -1,0 +1,47 @@
+[versions]
+minSdk = "21"
+targetSdk = "34"
+compileSdk = "34"
+gVersionCode = "1"
+gVersionName = "1.0.0"
+hVersionCode = "1"
+hVersionName = "1.0.0"
+
+v-android-gradle-plugin = "8.1.0"
+v-org-jetbrains-kotlin-android = "1.8.10"
+v-junit = "4.13.2"
+v-ext-junit = "1.1.5"
+v-espresso = "3.5.1"
+v-core-ktx = "1.9.0"
+v-compose = "2023.03.00"
+v-compose-activity = "1.7.2"
+v-lifecycle-runtime-ktx = "2.6.1"
+
+[libraries]
+junit = {module = "junit:junit = version.ref", version.ref = "v-junit"}
+ext-junit = {module = "androidx.test.ext:junit = version.ref", version.ref = "v-ext-junit"}
+espresso = {module = "androidx.test.espresso:espresso-core", version.ref = "v-espresso"}
+ui-test-junit4 = {module = "androidx.compose.ui:ui-test-junit4"}
+lifecycle-runtime-ktx = {module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "v-lifecycle-runtime-ktx"}
+core-ktx = {module = "androidx.core:core-ktx", version.ref = "v-core-ktx"}
+compose-activity = {module = "androidx.activity:activity-compose", version.ref = "v-compose-activity"}
+compose-platform = {module = "androidx.compose:compose-bom", version.ref = "v-compose"}
+compose-ui = {module = "androidx.compose.ui:ui"}
+compose-ui-graphics = {module = "androidx.compose.ui:ui-graphics"}
+compose-ui-tooling-preview = {module = "androidx.compose.ui:ui-tooling-preview"}
+compose-material = {module = "androidx.compose.material3:material3"}
+compose-ui-tooling = {module = "androidx.compose.ui:ui-tooling"}
+compose-ui-test-manifest = {module = "androidx.compose.ui:ui-test-manifest"}
+
+[bundles]
+libs-bundles-compose-bundle = ["compose-activity",
+    "compose-platform",
+    "compose-ui",
+    "compose-ui-graphics",
+    "compose-ui-tooling-preview",
+    "compose-material"
+]
+
+[plugins]
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "v-org-jetbrains-kotlin-android" }
+android-application = { id = "com.android.application", version.ref = "v-android-gradle-plugin" }
