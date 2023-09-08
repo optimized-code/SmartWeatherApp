@@ -3,7 +3,6 @@ package com.optmizedcode.smartweatherforcast.helpers
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.os.Parcelable
 
 /*
 **************************************************************
@@ -18,33 +17,33 @@ import android.os.Parcelable
  ***************************************************************
  */
 
-enum class PREF_TYPE {
+enum class PREFSTYPE {
     USER,
     CONFIG,
-    OTHER
+    DEFAULT
 }
 
 object AppPrefs {
 
     private const val USER_PREFS = "user_prefs"
     private const val CONFIG_PREFS = "config_prefs"
-    private const val OTHER_PREFS = "other_prefs"
+    private const val DEFAULT_PREFS = "default_prefs"
 
     private lateinit var userPrefs: SharedPreferences
     private lateinit var configPrefs: SharedPreferences
-    private lateinit var otherPrefs: SharedPreferences
+    private lateinit var defaultPrefs: SharedPreferences
 
     fun start(context: Context) {
         userPrefs = context.getSharedPreferences(USER_PREFS, MODE_PRIVATE)
         configPrefs = context.getSharedPreferences(CONFIG_PREFS, MODE_PRIVATE)
-        otherPrefs = context.getSharedPreferences(OTHER_PREFS, MODE_PRIVATE)
+        defaultPrefs = context.getSharedPreferences(DEFAULT_PREFS, MODE_PRIVATE)
     }
 
-    fun whichPrefs(type: PREF_TYPE): SharedPreferences {
+    fun prefs(type: PREFSTYPE = PREFSTYPE.DEFAULT): SharedPreferences {
         return when (type) {
-            PREF_TYPE.USER -> userPrefs
-            PREF_TYPE.CONFIG -> configPrefs
-            PREF_TYPE.OTHER -> otherPrefs
+            PREFSTYPE.USER -> userPrefs
+            PREFSTYPE.CONFIG -> configPrefs
+            else -> defaultPrefs
         }
     }
 
@@ -54,34 +53,34 @@ object AppPrefs {
         editor.apply()
     }
 
-    fun set(key: String, value: Any?, type: PREF_TYPE) = run {
+    operator fun SharedPreferences.set(key: String, value: Any?) =
         when (value) {
-            is String -> whichPrefs(type).edit { it.putString(key, value) }
-            is Int -> whichPrefs(type).edit { it.putInt(key, value) }
-            is Float -> whichPrefs(type).edit { it.putFloat(key, value) }
-            is Boolean -> whichPrefs(type).edit { it.putBoolean(key, value) }
-            is Long -> whichPrefs(type).edit { it.putLong(key, value) }
+            is String -> edit { it.putString(key, value) }
+            is Int -> edit { it.putInt(key, value) }
+            is Float -> edit { it.putFloat(key, value) }
+            is Boolean -> edit { it.putBoolean(key, value) }
+            is Long -> edit { it.putLong(key, value) }
+            else -> throw UnsupportedOperationException("Not yet implemented")
         }
-    }
 
-    inline fun <reified T : Any> get(key: String, type: PREF_TYPE): T =
+    inline operator fun <reified T : Any> SharedPreferences.get(key: String): T =
         when (T::class) {
-            String::class -> whichPrefs(type).getString(key, "") as T
-            Int::class -> whichPrefs(type).getInt(key, 0) as T
-            Float::class -> whichPrefs(type).getFloat(key, 0f) as T
-            Boolean::class -> whichPrefs(type).getBoolean(key, false) as T
-            Long::class -> whichPrefs(type).getLong(key, 0L) as T
+            String::class -> getString(key, "") as T
+            Int::class -> getInt(key, -1) as T
+            Float::class -> getFloat(key, -1f) as T
+            Boolean::class -> getBoolean(key, false) as T
+            Long::class -> getLong(key, -1L) as T
             else -> throw UnsupportedOperationException("Still implementing")
         }
 
 
-    fun clear(list: List<PREF_TYPE>) {
-        list.forEach { pref ->
-            whichPrefs(pref).edit { it.clear().apply() }
+    fun SharedPreferences.clear(list: List<PREFSTYPE> = listOf(PREFSTYPE.DEFAULT)) {
+        repeat(list.size) {
+            edit { it.clear().apply() }
         }
     }
 
-    fun remove(key: String, type: PREF_TYPE) {
-        whichPrefs(type).edit { it.remove(key) }
+    fun SharedPreferences.remove(key: String) {
+        edit { it.remove(key) }
     }
 }

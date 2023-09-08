@@ -1,7 +1,6 @@
 package com.optmizedcode.smartweatherforcast
 
 import org.junit.Test
-
 import org.junit.Assert.*
 
 /**

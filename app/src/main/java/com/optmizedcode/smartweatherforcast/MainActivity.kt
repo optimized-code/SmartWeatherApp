@@ -14,6 +14,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.optmizedcode.smartweatherforcast.helpers.AppConstants
+import com.optmizedcode.smartweatherforcast.helpers.AppPrefs
+import com.optmizedcode.smartweatherforcast.helpers.AppPrefs.get
+import com.optmizedcode.smartweatherforcast.helpers.AppPrefs.set
+import com.optmizedcode.smartweatherforcast.helpers.KeysHelper
 import com.optmizedcode.smartweatherforcast.ui.theme.SmartWeatherForcastAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,7 +32,13 @@ class MainActivity : ComponentActivity() {
                         .padding(20.dp),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting(getString(R.string.app_name))
+                    AppPrefs.prefs()[KeysHelper.LANGUAGE] = KeysHelper.LANGUAGE_AR
+                    AppPrefs.prefs()["int_val"] = 1
+                    AppPrefs.prefs()["float_val"] = 20.0f
+                    AppPrefs.prefs()["boolean_val"] = false
+                    AppPrefs.prefs()["long_val"] = 10000000L
+                    val language = AppPrefs.prefs().get<String>(KeysHelper.LANGUAGE)
+                    Greeting("${getString(R.string.app_name)} - with language: $language")
                 }
             }
         }
