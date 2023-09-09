@@ -1,7 +1,14 @@
 
+
 plugins {
+    kotlin("kapt")
     alias(libs.plugins.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.com.google.dagger.hilt.android)
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 android {
@@ -51,19 +58,24 @@ android {
 }
 
 dependencies {
+
+    // ALL OTHER LIBRARIES
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
-
     implementation(libs.compose.activity)
     implementation(platform(libs.compose.platform))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
+    // ALL DEBUG IMPLEMENTATIONS LIBRARIES
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
 
+    // ALL TEST RELATED LIBRARIES
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso)

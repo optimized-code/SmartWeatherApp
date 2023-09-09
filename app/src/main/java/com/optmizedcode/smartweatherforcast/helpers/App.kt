@@ -1,6 +1,7 @@
 package com.optmizedcode.smartweatherforcast.helpers
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
 /*
 **************************************************************
@@ -14,6 +15,8 @@ import android.app.Application
  * @license Open source
  ***************************************************************
  */
+
+@HiltAndroidApp
 class App : Application() {
     override fun onCreate() {
         super.onCreate()

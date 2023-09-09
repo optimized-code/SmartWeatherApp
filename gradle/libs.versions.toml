@@ -6,16 +6,18 @@ gVersionCode = "1"
 gVersionName = "1.0.0"
 hVersionCode = "1"
 hVersionName = "1.0.0"
-
+v-hilt = "2.44"
 v-android-gradle-plugin = "8.1.0"
 v-org-jetbrains-kotlin-android = "1.8.10"
 v-junit = "4.13.2"
 v-ext-junit = "1.1.5"
 v-espresso = "3.5.1"
 v-core-ktx = "1.9.0"
-v-compose = "2023.03.00"
+v-compose = "2023.09.00"
 v-compose-activity = "1.7.2"
-v-lifecycle-runtime-ktx = "2.6.1"
+v-lifecycle-runtime-ktx = "2.6.2"
+
+
 
 [libraries]
 junit = {module = "junit:junit", version.ref = "v-junit"}
@@ -32,6 +34,8 @@ compose-ui-tooling-preview = {module = "androidx.compose.ui:ui-tooling-preview"}
 compose-material = {module = "androidx.compose.material3:material3"}
 compose-ui-tooling = {module = "androidx.compose.ui:ui-tooling"}
 compose-ui-test-manifest = {module = "androidx.compose.ui:ui-test-manifest"}
+hilt-android = {module = "com.google.dagger:hilt-android", version.ref = "v-hilt"}
+hilt-compiler = {module = "com.google.dagger:hilt-android-compiler", version.ref = "v-hilt"}
 
 [bundles]
 libs-bundles-compose-bundle = ["compose-activity",
@@ -45,3 +49,4 @@ libs-bundles-compose-bundle = ["compose-activity",
 [plugins]
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "v-org-jetbrains-kotlin-android" }
 android-application = { id = "com.android.application", version.ref = "v-android-gradle-plugin" }
+com-google-dagger-hilt-android = {id = "com.google.dagger.hilt.android", version.ref = "v-hilt"}
