@@ -24,7 +24,6 @@ rootProject.name = "SmartWeatherForecastApp"
 include(":app")
 include(":core:common")
 include(":core:network")
-include(":core:navigation")
 include(":feature:data")
 include(":feature:domain")
 include(":feature:ui")
