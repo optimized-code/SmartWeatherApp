@@ -1,4 +1,4 @@
-
+import com.android.build.gradle.internal.scope.ProjectInfo.Companion.getBaseName
 
 plugins {
     kotlin("kapt")
@@ -29,8 +29,31 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
+
+            isDebuggable = true
             isMinifyEnabled = false
+            isShrinkResources = false
+
+//            buildConfigField("String", "WEATHER_API_KEY", "${property("weather_api_key")}")
+//            buildConfigField("String", "APP_BASE_URL", "${property("dev_base_url")}")
+
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-dev"
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        release {
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+
+//            buildConfigField("String", "WEATHER_API_KEY", "${property("weather_api_key")}")
+//            buildConfigField("String", "APP_BASE_URL", "${property("prod_base_url")}")
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -38,14 +61,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
+
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
