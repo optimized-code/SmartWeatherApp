@@ -6,16 +6,27 @@ gVersionCode = "1"
 gVersionName = "1.0.0"
 hVersionCode = "1"
 hVersionName = "1.0.0"
-
+v-hilt = "2.47"
 v-android-gradle-plugin = "8.1.0"
 v-org-jetbrains-kotlin-android = "1.8.10"
 v-junit = "4.13.2"
 v-ext-junit = "1.1.5"
 v-espresso = "3.5.1"
 v-core-ktx = "1.9.0"
-v-compose = "2023.03.00"
+v-compose = "2023.09.00"
 v-compose-activity = "1.7.2"
-v-lifecycle-runtime-ktx = "2.6.1"
+v-lifecycle-runtime-ktx = "2.6.2"
+runner = "1.0.2"
+espresso-core = "3.0.2"
+appcompat-v7 = "28.0.0"
+v-retrofit = "2.9.0"
+v-okhttp = "4.10.0"
+v-gson = "1.0.0"
+v-jackson = "2.7.2"
+v-core-jackson = "2.12.3"
+appcompat = "1.6.1"
+material = "1.9.0"
+
 
 [libraries]
 junit = {module = "junit:junit", version.ref = "v-junit"}
@@ -32,6 +43,22 @@ compose-ui-tooling-preview = {module = "androidx.compose.ui:ui-tooling-preview"}
 compose-material = {module = "androidx.compose.material3:material3"}
 compose-ui-tooling = {module = "androidx.compose.ui:ui-tooling"}
 compose-ui-test-manifest = {module = "androidx.compose.ui:ui-test-manifest"}
+hilt-android = {module = "com.google.dagger:hilt-android", version.ref = "v-hilt"}
+hilt-compiler = {module = "com.google.dagger:hilt-android-compiler", version.ref = "v-hilt"}
+runner = { group = "com.android.support.test", name = "runner", version.ref = "runner" }
+espresso-core = { group = "com.android.support.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+appcompat-v7 = { group = "com.android.support", name = "appcompat-v7", version.ref = "appcompat-v7" }
+retrofit = {module = "com.squareup.retrofit2:retrofit", version.ref = "v-retrofit"}
+okhttp-logging-interceptor = {module = "com.squareup.okhttp3:logging-interceptor", version.ref = "v-okhttp"}
+okhttp-urlconnection = {module = "com.squareup.okhttp3:okhttp-urlconnection", version.ref = "v-okhttp"}
+converter-jackson = {module = "com.squareup.retrofit2:converter-jackson", version.ref = "v-jackson"}
+jackson-databind = {module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "v-core-jackson"}
+jackson-core = {module = "com.fasterxml.jackson.core:jackson-core", version.ref = "v-core-jackson"}
+jackson-annotations = {module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "v-core-jackson"}
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+
 
 [bundles]
 libs-bundles-compose-bundle = ["compose-activity",
@@ -45,3 +72,5 @@ libs-bundles-compose-bundle = ["compose-activity",
 [plugins]
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "v-org-jetbrains-kotlin-android" }
 android-application = { id = "com.android.application", version.ref = "v-android-gradle-plugin" }
+com-google-dagger-hilt-android = {id = "com.google.dagger.hilt.android", version.ref = "v-hilt"}
+com-android-library = { id = "com.android.library", version.ref = "v-android-gradle-plugin" }

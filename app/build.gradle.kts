@@ -1,7 +1,14 @@
+import com.android.build.gradle.internal.scope.ProjectInfo.Companion.getBaseName
 
 plugins {
+    kotlin("kapt")
     alias(libs.plugins.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.com.google.dagger.hilt.android)
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 android {
@@ -22,8 +29,31 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
+
+            isDebuggable = true
             isMinifyEnabled = false
+            isShrinkResources = false
+
+//            buildConfigField("String", "WEATHER_API_KEY", "${property("weather_api_key")}")
+//            buildConfigField("String", "APP_BASE_URL", "${property("dev_base_url")}")
+
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-dev"
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        release {
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+
+//            buildConfigField("String", "WEATHER_API_KEY", "${property("weather_api_key")}")
+//            buildConfigField("String", "APP_BASE_URL", "${property("prod_base_url")}")
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -31,14 +61,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
+
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -51,19 +83,24 @@ android {
 }
 
 dependencies {
+
+    // ALL OTHER LIBRARIES
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
-
     implementation(libs.compose.activity)
     implementation(platform(libs.compose.platform))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
+    // ALL DEBUG IMPLEMENTATIONS LIBRARIES
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
 
+    // ALL TEST RELATED LIBRARIES
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso)
