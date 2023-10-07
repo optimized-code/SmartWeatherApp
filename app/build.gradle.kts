@@ -84,6 +84,10 @@ android {
 
 dependencies {
 
+    implementation(project(":feature:weather:ui"))
+    implementation(project(":core:feature_api"))
+    implementation(project(":core:common"))
+
     // ALL OTHER LIBRARIES
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -95,6 +99,8 @@ dependencies {
     implementation(libs.compose.material)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    implementation(libs.navigation.compose)
 
     // ALL DEBUG IMPLEMENTATIONS LIBRARIES
     debugImplementation(libs.compose.ui.tooling)

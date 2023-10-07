@@ -26,6 +26,8 @@ v-jackson = "2.7.2"
 v-core-jackson = "2.12.3"
 appcompat = "1.6.1"
 material = "1.9.0"
+v-nav-version = "2.7.2"
+
 
 
 [libraries]
@@ -57,6 +59,7 @@ jackson-core = {module = "com.fasterxml.jackson.core:jackson-core", version.ref 
 jackson-annotations = {module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "v-core-jackson"}
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "v-nav-version" }
 
 
 
