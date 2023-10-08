@@ -21,8 +21,8 @@ import dagger.hilt.components.SingletonComponent
  ***************************************************************
  */
 
-@Module
 @InstallIn(SingletonComponent::class)
+@Module
 object WeatherDataModule {
     @Provides
     fun provideWeatherReportDataRepo(weatherDataProviders: WeatherDataProviders): WeatherReportDataRepo {

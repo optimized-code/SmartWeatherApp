@@ -1,6 +1,7 @@
 package com.optmizedcode.core.network.dataproviders
 
 import com.optmizedcode.core.network.ApiService
+import com.optmizedcode.core.network.Endpoints.API_KEY
 import javax.inject.Inject
 
 /*
@@ -18,6 +19,6 @@ import javax.inject.Inject
 
 class WeatherDataProviders @Inject constructor(private val apiService: ApiService) {
     suspend fun getWeatherReportData(
-        key: String, city: String, days: Int, aqi: String, alerts: String
-    ) = apiService.getWeatherReportData(key, city, days, aqi, alerts)
+        city: String, days: Int, aqi: String, alerts: String
+    ) = apiService.getWeatherReportData(API_KEY, city, days, aqi, alerts)
 }

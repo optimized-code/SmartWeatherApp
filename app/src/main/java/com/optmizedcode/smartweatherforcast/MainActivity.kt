@@ -3,6 +3,7 @@ package com.optmizedcode.smartweatherforcast
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.feature.weather.ui.navigation.screen.TodayWeatherReportViewModel
 import com.optmizedcode.smartweatherforcast.helpers.AppConstants
 import com.optmizedcode.smartweatherforcast.helpers.AppPrefs
 import com.optmizedcode.smartweatherforcast.helpers.AppPrefs.get
@@ -36,7 +38,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SmartWeatherForcastAppTheme {
-                // A surface container using the 'background' color from the theme
+//                // A surface container using the 'background' color from the theme
                 val navController = rememberNavController()
                 App(navHostController = navController, navigationProvider)
             }
@@ -55,13 +57,13 @@ fun App(navHostController: NavHostController, navigationProvider: NavigationProv
         
         AppNavGraph(navController = navHostController, navigationProvider = navigationProvider)
         
-        AppPrefs.prefs()[KeysHelper.LANGUAGE] = KeysHelper.LANGUAGE_AR
-        AppPrefs.prefs()["int_val"] = 1
-        AppPrefs.prefs()["float_val"] = 20.0f
-        AppPrefs.prefs()["boolean_val"] = false
-        AppPrefs.prefs()["long_val"] = 10000000L
-        val language = AppPrefs.prefs().get<String>(KeysHelper.LANGUAGE)
-        Greeting("${stringResource(id = R.string.app_name)} - with language: $language")
+//        AppPrefs.prefs()[KeysHelper.LANGUAGE] = KeysHelper.LANGUAGE_AR
+//        AppPrefs.prefs()["int_val"] = 1
+//        AppPrefs.prefs()["float_val"] = 20.0f
+//        AppPrefs.prefs()["boolean_val"] = false
+//        AppPrefs.prefs()["long_val"] = 10000000L
+//        val language = AppPrefs.prefs().get<String>(KeysHelper.LANGUAGE)
+//        Greeting("${stringResource(id = R.string.app_name)} - with language: $language")
     }
 }
 

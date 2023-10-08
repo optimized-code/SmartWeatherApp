@@ -22,12 +22,11 @@ import javax.inject.Inject
 class WeatherReportDataRepoImpl @Inject constructor(private val weatherDataProviders: WeatherDataProviders) :
     WeatherReportDataRepo {
     override suspend fun getWeatherReportData(
-        key: String,
         city: String,
         days: Int,
         aqi: String,
         alerts: String
     ): WeatherReportDataModel {
-        return weatherDataProviders.getWeatherReportData(key, city, days, aqi, alerts).toDomainWeatherReportDataModel()
+        return weatherDataProviders.getWeatherReportData(city, days, aqi, alerts).toDomainWeatherReportDataModel()
     }
 }

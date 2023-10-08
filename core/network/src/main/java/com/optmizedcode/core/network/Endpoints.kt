@@ -14,5 +14,7 @@ package com.optmizedcode.core.network
  */
 
 object Endpoints {
+    val API_KEY = BuildConfig.WEATHER_API_KEY
+
     const val WEATHER_REPORT = "forecast.json"
 }

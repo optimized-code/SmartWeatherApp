@@ -1,8 +1,11 @@
 package com.feature.weather.ui.navigation
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.core.feature_api.FeatureApi
+import com.feature.weather.ui.navigation.screen.TodayWeatherReportViewModel
+import com.feature.weather.ui.navigation.screen.WeatherReportScreen
 import com.optmizedcode.core.common.navigation_constant.WeatherFeature
 
 /*
@@ -25,7 +28,8 @@ internal object InternalWeatherFeatureApi: FeatureApi {
     ) {
         navGraphBuilder.navigation(startDestination = WeatherFeature.weatherScreenRoute, route = WeatherFeature.nestedRoute){
             composable(WeatherFeature.weatherScreenRoute){
-
+                val viewModel = hiltViewModel<TodayWeatherReportViewModel>()
+                WeatherReportScreen(viewModel = viewModel)
             }
         }
     }

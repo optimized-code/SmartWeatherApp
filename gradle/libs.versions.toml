@@ -25,9 +25,8 @@ v-gson = "1.0.0"
 v-jackson = "2.7.2"
 v-core-jackson = "2.12.3"
 appcompat = "1.6.1"
-material = "1.9.0"
-v-nav-version = "2.7.2"
-
+material = "1.10.0"
+v-nav-version = "2.7.4"
 
 
 [libraries]

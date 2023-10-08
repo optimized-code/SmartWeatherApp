@@ -1,5 +1,6 @@
 package com.optmizedcode.core.network
 
+import com.optmizedcode.core.network.Endpoints.API_KEY
 import com.optmizedcode.core.network.models.WeatherReportResponse
 import retrofit2.http.GET
 import retrofit2.http.Query

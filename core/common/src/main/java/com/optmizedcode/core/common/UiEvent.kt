@@ -13,7 +13,7 @@ package com.optmizedcode.core.common
  ***************************************************************
  */
 
-sealed class UiEvent<T>(data: T? = null, message: String = "") {
+sealed class UiEvent<T>(val data: T? = null, val message: String = "") {
     class Loading<T>(): UiEvent<T>()
     class Success<T>(data: T?): UiEvent<T>(data = data)
     class Error<T>(message: String): UiEvent<T>(message = message)

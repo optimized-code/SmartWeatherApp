@@ -20,8 +20,8 @@ import dagger.hilt.components.SingletonComponent
  ***************************************************************
  */
 
-@Module
 @InstallIn(SingletonComponent::class)
+@Module
 object DomainLayerModule {
     @Provides
     fun provideGetWeatherReportDataUseCase(weatherReportDataRepo: WeatherReportDataRepo): GetWeatherReportDataUseCase {

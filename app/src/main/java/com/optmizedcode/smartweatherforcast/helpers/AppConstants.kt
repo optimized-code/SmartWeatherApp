@@ -1,5 +1,7 @@
 package com.optmizedcode.smartweatherforcast.helpers
 
+import com.optmizedcode.smartweatherforcast.BuildConfig
+
 /*
 **************************************************************
  * www.optmizedcode.com
@@ -15,6 +17,6 @@ package com.optmizedcode.smartweatherforcast.helpers
 
 class AppConstants {
     companion object {
-     const val currentLocal = "en" // "ar"
+        const val currentLocal = "en" // "ar"
     }
 }
