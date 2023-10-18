@@ -1,0 +1,24 @@
+name: SmartWeatherAppCI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # To run actions manually from actions
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run a one-line script
+        run: acho hello, world
+      - name: Run a multi-line script
+        run: 
+          eacho check lint errors,
+          echo test build and generate apk.
+        
+    
