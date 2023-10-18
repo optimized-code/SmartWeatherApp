@@ -2,9 +2,9 @@ name: SmartWeatherAppCI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
   # To run actions manually from actions
   workflow_dispatch:
