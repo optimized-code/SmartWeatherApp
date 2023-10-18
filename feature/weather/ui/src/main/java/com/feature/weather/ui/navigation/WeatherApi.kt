@@ -17,9 +17,9 @@ import com.core.feature_api.FeatureApi
  ***************************************************************
  */
 
-interface WeatherApi: FeatureApi {}
+interface WeatherApi : FeatureApi {}
 
-class WeatherApiImpl: WeatherApi {
+class WeatherApiImpl : WeatherApi {
     override fun registerGraph(navController: NavHostController, navGraphBuilder: NavGraphBuilder) {
         InternalWeatherFeatureApi.registerGraph(
             navController,

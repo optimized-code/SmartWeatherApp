@@ -6,6 +6,14 @@ plugins {
     alias(libs.plugins.com.android.library) apply false
 }
 
+allprojects {
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_1_8.toString()
+        }
+    }
+}
+
 tasks.register("clean"){
     delete(rootProject.buildDir)
 }
