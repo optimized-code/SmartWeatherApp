@@ -19,10 +19,10 @@ jobs:
           node-version: 16
 
       - name: Run a one-line script
-        run: acho hello, world
+        run: echo hello, world
       - name: Run a multi-line script
         run: 
-          eacho check lint errors,
+          echo check lint errors,
           echo test build and generate apk.
         
     
