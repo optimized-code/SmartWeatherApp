@@ -33,7 +33,8 @@ class GetWeatherReportDataUseCase @Inject constructor(private val weatherReportD
         alerts: String
     ) = flow {
         emit(UiEvent.Loading())
-        val data = WeatherReportDataModel(Location(), Current()) //weatherReportDataRepo.getWeatherReportData(city, days, aqi, alerts)
+        val data = WeatherReportDataModel(Location(), Current(), arrayListOf())
+//        val data = weatherReportDataRepo.getWeatherReportData(city, days, aqi, alerts)
         emit(UiEvent.Success(data))
     }.catch {
         emit(UiEvent.Error(it.message.toString()))

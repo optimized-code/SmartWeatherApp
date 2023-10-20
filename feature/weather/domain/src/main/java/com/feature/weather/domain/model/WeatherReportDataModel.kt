@@ -15,7 +15,8 @@ package com.feature.weather.domain.model
 
 data class WeatherReportDataModel(
     val location: Location,
-    val current: Current
+    val current: Current,
+    val forecast: ArrayList<Forecastday>
 )
 
 data class Location(
@@ -71,4 +72,86 @@ data class AirQuality(
     var pm10: Double? = null,
     var usEpaIndex: Int? = null,
     var gbDefraIndex: Int? = null
+)
+
+data class Forecast(
+    var forecastday: ArrayList<Forecastday>
+)
+
+data class Forecastday(
+    var date: String? = null,
+    var date_epoch: Long? = null,
+    var day: Day? = null,
+    var astro: Astro? = null,
+    var hour: ArrayList<Hour>? = null
+)
+
+data class Day(
+    var maxtemp_c: Double? = null,
+    var maxtemp_f: Double? = null,
+    var mintemp_c: Double? = null,
+    var mintemp_f: Double? = null,
+    var avgtemp_c: Double? = null,
+    var avgtemp_f: Double? = null,
+    var maxwind_mph: Double? = null,
+    var maxwind_kph: Double? = null,
+    var totalprecip_mm: Double? = null,
+    var totalprecip_in: Double? = null,
+    var totalsnow_cm: Double? = null,
+    var avgvis_km: Double? = null,
+    var avgvis_miles: Double? = null,
+    var avghumidity: Double? = null,
+    var daily_will_it_rain: Double? = null,
+    var daily_chance_of_rain: Double? = null,
+    var daily_will_it_snow: Double? = null,
+    var daily_chance_of_snow: Double? = null,
+    var condition: Condition? = null,
+    var uv: Double? = null,
+)
+
+data class Astro(
+    var sunrise: String? = null,
+    var sunset: String? = null,
+    var moonrise: String? = null,
+    var moonset: String? = null,
+    var moon_phase: String? = null,
+    var moon_illumination: String? = null,
+    var is_moon_up: Boolean? = null,
+    var is_sun_up: Boolean? = null,
+)
+
+data class Hour(
+    var chanceOfRain: Long? = null,
+    val chanceOfSnow: Long? = null,
+    val cloud: Long? = null,
+    val condition: Condition? = null,
+    val dewpointC: Double? = null,
+    val dewpointF: Double? = null,
+    val feelslikeC: Double? = null,
+    val feelslikeF: Double? = null,
+    val gustKph: Double? = null,
+    val gustMph: Double? = null,
+    val heatindexC: Double? = null,
+    val heatindexF: Double? = null,
+    val humidity: Long? = null,
+    val isDay: Long? = null,
+    val precipIn: Double? = null,
+    val precipMm: Double? = null,
+    val pressureIn: Double? = null,
+    val pressureMb: Double? = null,
+    val tempC: Double? = null,
+    val tempF: Double? = null,
+    val time: String? = null,
+    val timeEpoch: Long? = null,
+    val uv: Double? = null,
+    val visKm: Double? = null,
+    val visMiles: Double? = null,
+    val willItRain: Long? = null,
+    val willItSnow: Long? = null,
+    val windDegree: Long? = null,
+    val windDir: String? = null,
+    val windKph: Double? = null,
+    val windMph: Double? = null,
+    val windchillC: Double? = null,
+    val windchillF: Double? = null
 )

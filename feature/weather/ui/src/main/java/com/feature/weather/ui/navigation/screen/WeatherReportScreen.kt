@@ -1,5 +1,6 @@
 package com.feature.weather.ui.navigation.screen
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,17 +9,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalAbsoluteTonalElevation
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +35,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.feature.weather.ui.R
 
 /*
@@ -45,6 +53,43 @@ import com.feature.weather.ui.R
  * @license Open source
  ***************************************************************
  */
+@Preview(
+    name = "Dark mode",
+    group = "UI mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
+    showBackground = true
+)
+@Preview(
+    name = "Light mode",
+    group = "UI mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL,
+    showBackground = true
+)
+annotation class DarkLightPreviews
+
+
+@Preview(showBackground = true)
+@Composable
+fun WeatherReportScreen1() {
+    Scaffold(
+        bottomBar = { AppNavigationBar() },
+        containerColor = Color.Transparent,
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
+            .statusBarsPadding().background(gradientBg())
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
+            ) {
+            LocationText()
+        }
+    }
+}
+
 
 @Composable
 fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
@@ -107,11 +152,16 @@ fun AppNavigationBar() {
             onClick = { /*TODO*/ },
             label = {
                 Text(
-                    text = stringResource(R.string.saved_cities),
-                    modifier = Modifier.background(Color.Blue)
+                    text = stringResource(R.string.saved_cities)
                 )
             },
-            icon = {})
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = null
+                )
+            }
+        )
 
         NavigationBarItem(
             selected = false,
@@ -120,8 +170,18 @@ fun AppNavigationBar() {
                 Text(text = stringResource(R.string.settings))
             },
             icon = {
-                Icon(painter = painterResource(id = com.google.android.material.R.drawable.ic_arrow_back_black_24), contentDescription = null)
-            })
+                Icon(
+                    imageVector = Icons.Default.Face,
+                    contentDescription = null
+                )
+            },
+            colors = androidx.compose.material3.NavigationBarItemDefaults
+                .colors(
+                    selectedIconColor = Color.Unspecified,
+                    indicatorColor = MaterialTheme.colorScheme.surfaceColorAtElevation(LocalAbsoluteTonalElevation.current)
+                )
+        )
+
     }
 }
 
