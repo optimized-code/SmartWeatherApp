@@ -1,32 +1,41 @@
 package com.feature.weather.ui.navigation.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.feature.weather.ui.R
 
 /*
 **************************************************************
- * www.optmizedcode.com 
+ * www.optimizedcode.com
  * Kotlin
  *
  * @author ehtisham
@@ -39,55 +48,82 @@ import com.feature.weather.ui.R
 
 @Composable
 fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
-
     val result = viewModel.weatherReportData.value
-
     Scaffold(
-        topBar = {
-            Text("Weather Report")
-        }
-    ) {
-        Log.d("TAG", "Weather screen $it")
-        if (result.isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        bottomBar = { AppNavigationBar() },
+        containerColor = Color.Transparent,
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
+            .statusBarsPadding()
+    ) { innerPadding ->
+        LocationText()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center,
+
+            ) {
+            if (result.isLoading) {
                 CircularProgressIndicator()
             }
-        }
 
-        if (result.error.isNotEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            if (result.error.isNotEmpty()) {
                 Text(result.error)
             }
-        }
 
-        result.success?.let {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            result.success?.let {
                 Text(it.current.condition?.text ?: "There is something")
             }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun PreviewWeatherHomeScreen() {
-    Surface(
+fun AppNavigationBar() {
+    NavigationBar(
         modifier = Modifier
-            .fillMaxSize()
-            .background(brush = gradientBg()),
-        color = Color.Transparent
+            .padding(horizontal = 20.dp, vertical = 10.dp)
+            .clip(RoundedCornerShape(20.dp)),
+        containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp, top = 40.dp, bottom = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LocationText()
-        }
+        NavigationBarItem(
+            selected = true,
+            onClick = { /*TODO*/ },
+            icon = {
+                Icon(imageVector = Icons.Default.Home, contentDescription = null)
+            })
+
+        NavigationBarItem(
+            selected = false,
+            onClick = { /*TODO*/ },
+            icon = {
+                Icon(imageVector = Icons.Default.Search, contentDescription = null)
+            })
+
+        NavigationBarItem(
+            selected = false,
+            onClick = { /*TODO*/ },
+            label = {
+                Text(
+                    text = stringResource(R.string.saved_cities),
+                    modifier = Modifier.background(Color.Blue)
+                )
+            },
+            icon = {})
+
+        NavigationBarItem(
+            selected = false,
+            onClick = { /*TODO*/ },
+            label = {
+                Text(text = stringResource(R.string.settings))
+            },
+            icon = {
+                Icon(painter = painterResource(id = com.google.android.material.R.drawable.ic_arrow_back_black_24), contentDescription = null)
+            })
     }
 }
-
 
 @Composable
 fun gradientBg(): Brush {
@@ -96,7 +132,7 @@ fun gradientBg(): Brush {
             colorResource(id = R.color.wa_primary),
             colorResource(id = R.color.wa_secondary),
         ),
-        radius = 1800.0f,
+        radius = 1300.0f,
         center = Offset.Zero
     )
 }
@@ -104,13 +140,11 @@ fun gradientBg(): Brush {
 @Composable
 fun LocationText() {
     Text(
-        text = "Makkah",
+        text = "Whereas",
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         color = Color.White,
         modifier = Modifier.padding(horizontal = 20.dp),
-        style = MaterialTheme.typography.headlineMedium.copy(
-            fontWeight = FontWeight.SemiBold
-        )
+        style = MaterialTheme.typography.headlineLarge
     )
 }

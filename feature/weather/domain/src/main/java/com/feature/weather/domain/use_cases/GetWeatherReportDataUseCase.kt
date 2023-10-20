@@ -1,5 +1,7 @@
 package com.feature.weather.domain.use_cases
 
+import com.feature.weather.domain.model.Current
+import com.feature.weather.domain.model.Location
 import com.feature.weather.domain.model.WeatherReportDataModel
 import com.feature.weather.domain.repo.WeatherReportDataRepo
 import com.optmizedcode.core.common.UiEvent
@@ -31,7 +33,7 @@ class GetWeatherReportDataUseCase @Inject constructor(private val weatherReportD
         alerts: String
     ) = flow {
         emit(UiEvent.Loading())
-        val data = weatherReportDataRepo.getWeatherReportData(city, days, aqi, alerts)
+        val data = WeatherReportDataModel(Location(), Current()) //weatherReportDataRepo.getWeatherReportData(city, days, aqi, alerts)
         emit(UiEvent.Success(data))
     }.catch {
         emit(UiEvent.Error(it.message.toString()))

@@ -34,10 +34,11 @@ class TodayWeatherReportViewModel @Inject constructor(private val getWeatherRepo
     }
 
     private val _weatherReportData = mutableStateOf(WeatherReportStateHolder())
-    val weatherReportData: State<WeatherReportStateHolder> get() = _weatherReportData
+    val weatherReportData: State<WeatherReportStateHolder>
+        get() = _weatherReportData
 
-    fun getWeatherReport() = viewModelScope.launch {
-        getWeatherReportDataUseCase("Jeddah", 7, "yes", "yes")
+    private fun getWeatherReport() = viewModelScope.launch {
+        getWeatherReportDataUseCase("Jeddah", 7, "no", "no")
             .onEach {
                 when (it){
                     is UiEvent.Loading -> {
