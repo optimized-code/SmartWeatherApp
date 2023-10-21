@@ -66,21 +66,7 @@ fun SmartWeatherForcastAppTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = JosefinTypography,
+        typography = CairoTypography,
         content = content
     )
 }
-
-@Preview(
-    name = "Dark mode",
-    group = "UI mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
-    showBackground = true
-)
-@Preview(
-    name = "Light mode",
-    group = "UI mode",
-    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL,
-    showBackground = true
-)
-annotation class DarkLightPreviews
