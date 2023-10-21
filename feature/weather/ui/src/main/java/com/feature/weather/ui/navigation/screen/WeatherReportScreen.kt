@@ -374,26 +374,28 @@ fun WeatherSummaryCircle(
                 modifier = Modifier
                     .background(summaryCircleGradientBg())
                     .fillMaxSize()
-                    .padding(25.dp),
+                    .padding(top = 5.dp, start = 25.dp, end = 25.dp, bottom = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = location.name ?: "Jeddah",
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontSize = 36.sp
+                    ),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Box(
-                    modifier = Modifier.height(85.dp)
+                    modifier = Modifier.height(95.dp)
                 )
                 Text(
-                    text = current.condition?.text ?: "Clear",
+                    text = "Hum: ${current.humidity}%, Vis: ${current.visKm} km",
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
-                    text = "H: ${current.humidity}, V-km: ${current.visKm}",
-                    style = MaterialTheme.typography.headlineMedium,
+                    text = current.condition?.text ?: "Clear",
+                    style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
@@ -421,10 +423,6 @@ fun WeatherSummaryCircle(
             )
         }
     }
-}
-
-@Composable
-fun WeatherSummaryCircleConstraintLayout(location: Location = Location()) {
 }
 
 @Composable
