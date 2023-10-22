@@ -79,6 +79,7 @@ dependencies {
     implementation(project(":feature:weather:ui"))
     implementation(project(":core:feature_api"))
     implementation(project(":core:common"))
+    implementation(project(":assets"))
 
     // ALL OTHER LIBRARIES
     implementation(libs.core.ktx)

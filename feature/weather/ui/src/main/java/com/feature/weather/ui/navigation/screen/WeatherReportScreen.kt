@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,6 +55,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.feature.weather.domain.model.Current
+import com.feature.weather.domain.model.Hour
 import com.feature.weather.domain.model.Location
 import com.feature.weather.ui.R
 
@@ -111,11 +115,18 @@ fun Portrait() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
-            WeatherSummaryCircle()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(25.dp)
+            ) {
+                WeatherSummaryCircle()
+                HourlyForecast()
+            }
         }
     }
 }
@@ -141,6 +152,7 @@ fun Landscape() {
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             WeatherSummaryCircle()
+            HourlyForecast()
         }
     }
 }
@@ -175,8 +187,8 @@ fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
             }
 
             result.success?.let {
-                //Text(it.current.condition?.text ?: "There is something")
                 WeatherSummaryCircle(it.location, it.current)
+                HourlyForecast(it.forecast[0].hour)
             }
         }
     }
@@ -426,8 +438,66 @@ fun WeatherSummaryCircle(
 }
 
 @Composable
-fun HourlyForecast() {
-    /* TODO */
+fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf()) {
+    hours?.add(Hour())
+    hours?.add(Hour())
+    hours?.add(Hour())
+
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                BorderStroke(1.dp, Color.White), shape = RoundedCornerShape(
+                    0.dp, 15.dp, 15.dp, 15.dp
+                )
+            ),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        hours?.let {
+            items(items = hours) {
+                HourlyRowItem(it)
+            }
+        }
+    }
+}
+
+
+@Composable
+fun HourlyRowItem(hour: Hour = Hour()) {
+    Column(
+        modifier = Modifier.padding(vertical = 10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .size(70.dp)
+                .border(
+                    BorderStroke(1.dp, Color.White),
+                    shape = RoundedCornerShape(10.dp)
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "${hour.tempC ?: "27"}°",
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            hour.time?.split(" ")?.get(1)?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+        Icon(
+            painter = painterResource(id = com.optmizedcode.assets.R.drawable.cloud_3d_200),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier.size(30.dp)
+        )
+    }
 }
 
 @Composable

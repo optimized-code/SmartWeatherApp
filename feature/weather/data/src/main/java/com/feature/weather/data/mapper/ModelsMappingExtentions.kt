@@ -26,9 +26,9 @@ import com.optmizedcode.core.network.models.WeatherReportResponse
 
 fun WeatherReportResponse.toDomainWeatherReportDataModel(): WeatherReportDataModel {
     fun getHours(hours: ArrayList<com.optmizedcode.core.network.models.Hour>?): ArrayList<Hour>? {
-        val result: ArrayList<Hour>? = null
+        val result: ArrayList<Hour> = arrayListOf()
         hours?.forEach {
-            Hour(
+            val hour = Hour(
                 chanceOfRain = it.chanceOfRain,
                 chanceOfSnow = it.chanceOfSnow,
                 cloud = it.cloud,
@@ -67,6 +67,7 @@ fun WeatherReportResponse.toDomainWeatherReportDataModel(): WeatherReportDataMod
                 windchillC = it.windchillC,
                 windchillF = it.windchillF
             )
+            result.add(hour)
         }
 
         return result
@@ -134,7 +135,7 @@ fun WeatherReportResponse.toDomainWeatherReportDataModel(): WeatherReportDataMod
             )
             result.add(eachDay)
         }
-        return ArrayList()
+        return result
     }
 
     return WeatherReportDataModel(
