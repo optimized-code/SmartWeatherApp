@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#BB86FC</color>
+    <color name="purple_200">#6A6571</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
@@ -8,10 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="white_90">#90FFFFFF</color>
+    <color name="white_90">#41484C</color>
     <color name="wa_primary">#6db2e6</color>
     <color name="wa_secondary_80">#905875df</color>
     <color name="wa_secondary">#5875df</color>
-    <color name="wa_blackWhite">#FF000000</color>
-    <color name="wa_whiteBlack">#FFFFFFFF</color>
+    <color name="wa_blackWhite">#FFFFFFFF</color>
+    <color name="wa_whiteBlack">#232B30</color>
 </resources>

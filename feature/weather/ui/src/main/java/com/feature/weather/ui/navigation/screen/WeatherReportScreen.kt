@@ -1,6 +1,7 @@
 package com.feature.weather.ui.navigation.screen
 
 import android.content.res.Configuration
+import android.graphics.drawable.shapes.OvalShape
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +18,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -26,8 +30,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -44,21 +51,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.feature.weather.domain.model.Current
 import com.feature.weather.domain.model.Hour
 import com.feature.weather.domain.model.Location
 import com.feature.weather.ui.R
-
+import com.feature.weather.ui.navigation.faketheme.theme.SmartWeatherForcastAppTheme_Fake
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /*
 **************************************************************
@@ -76,26 +92,33 @@ import com.feature.weather.ui.R
     name = "Dark mode",
     group = "UI mode",
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
-    showBackground = true
+    showBackground = true,
+    widthDp = 360,
+    heightDp = 640
 )
 @Preview(
     name = "Light mode",
     group = "UI mode",
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL,
-    showBackground = true
+    showBackground = true,
+    widthDp = 360,
+    heightDp = 640
 )
 annotation class DarkLightPreviews
 
 
 //@Preview(name = "5-inch Device Landscape", widthDp = 640, heightDp = 360)
-@Preview(name = "5-inch Device Portrait", widthDp = 360, heightDp = 640)
+//@Preview(name = "5-inch Device Portrait", widthDp = 360, heightDp = 640)
+@DarkLightPreviews
 @Composable
 fun WeatherReportScreen_onlyForPreview() {
     val landscape = false
-    if (landscape) {
-        Landscape()
-    } else {
-        Portrait()
+    SmartWeatherForcastAppTheme_Fake {
+        if (landscape) {
+            Landscape()
+        } else {
+            Portrait()
+        }
     }
 }
 
@@ -115,18 +138,22 @@ fun Portrait() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(25.dp)
-            ) {
-                WeatherSummaryCircle()
-                HourlyForecast()
-            }
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .padding(20.dp)
+//                    .verticalScroll(rememberScrollState()),
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                verticalArrangement = Arrangement.spacedBy(25.dp)
+//            ) {
+            WeatherSummaryCircle()
+            AdditionalInfoRow()
+            HourlyForecast()
+//            }
         }
     }
 }
@@ -152,6 +179,7 @@ fun Landscape() {
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             WeatherSummaryCircle()
+            AdditionalInfoRow()
             HourlyForecast()
         }
     }
@@ -188,39 +216,11 @@ fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
 
             result.success?.let {
                 WeatherSummaryCircle(it.location, it.current)
+                AdditionalInfoRow(it.current.humidity, it.current.windKph, it.current.visKm)
                 HourlyForecast(it.forecast[0].hour)
             }
         }
     }
-
-//    Scaffold(
-//        bottomBar = { AppNavigationBar() },
-//        containerColor = Color.Transparent,
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .navigationBarsPadding()
-//            .statusBarsPadding()
-//    ) { innerPadding ->
-//        Box(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(innerPadding),
-//            contentAlignment = Alignment.Center,
-//
-//            ) {
-//            if (result.isLoading) {
-//                CircularProgressIndicator()
-//            }
-//
-//            if (result.error.isNotEmpty()) {
-//                Text(result.error)
-//            }
-//
-//            result.success?.let {
-//                Text(it.current.condition?.text ?: "There is something")
-//            }
-//        }
-//    }
 }
 
 @Composable
@@ -334,13 +334,14 @@ fun AppNavigationBar() {
 
 @Composable
 fun gradientBg(): Brush {
-    return Brush.radialGradient(
-        colors = listOf(
-            colorResource(id = R.color.wa_primary),
-            colorResource(id = R.color.wa_secondary),
-        ),
-        radius = 1300.0f,
-        center = Offset.Zero
+
+    val colorStops = arrayOf(
+        0.2f to MaterialTheme.colorScheme.surface,
+        1f to colorResource(id = R.color.wa_secondary)
+    )
+
+    return Brush.linearGradient(
+        colorStops = colorStops,
     )
 }
 
@@ -355,26 +356,14 @@ fun summaryCircleGradientBg(): Brush {
 }
 
 @Composable
-fun LocationText() {
-    Text(
-        text = "Whereas",
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        color = Color.White,
-        modifier = Modifier.padding(horizontal = 20.dp),
-        style = MaterialTheme.typography.headlineLarge
-    )
-}
-
-@Composable
 fun WeatherSummaryCircle(
     location: Location = Location(), current: Current = Current()
 ) {
     Box {
         ElevatedCard(
             modifier = Modifier
-                .size(width = 260.dp, height = 280.dp)
-                .padding(top = 30.dp)
+                .size(width = 260.dp, height = 260.dp)
+                .padding(top = 10.dp)
                 .align(Alignment.Center)
                 .border(BorderStroke(5.dp, gradientBg()), shape = CircleShape),
             shape = CircleShape,
@@ -386,7 +375,7 @@ fun WeatherSummaryCircle(
                 modifier = Modifier
                     .background(summaryCircleGradientBg())
                     .fillMaxSize()
-                    .padding(top = 5.dp, start = 25.dp, end = 25.dp, bottom = 20.dp),
+                    .padding(top = 10.dp, start = 25.dp, end = 25.dp, bottom = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -401,8 +390,8 @@ fun WeatherSummaryCircle(
                     modifier = Modifier.height(95.dp)
                 )
                 Text(
-                    text = "Hum: ${current.humidity}%, Vis: ${current.visKm} km",
-                    style = MaterialTheme.typography.headlineMedium,
+                    text = "Feels like ${current.feelslikeC}",
+                    style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
@@ -415,16 +404,27 @@ fun WeatherSummaryCircle(
         Row(
             modifier = Modifier
                 .height(140.dp)
+                .fillMaxWidth()
                 .align(Alignment.CenterEnd),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+            Spacer(modifier = Modifier.weight(2f))
             Text(
-                text = "${current.tempC ?: ""}°",
-                style = MaterialTheme.typography.displayLarge.copy(
-                    fontSize = 90.sp
-                ),
-                color = MaterialTheme.colorScheme.onPrimary
+                text = "${current.tempC ?: "28"}°",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.displayLarge.merge(
+                    TextStyle(
+                        fontSize = 90.sp,
+                        platformStyle = PlatformTextStyle(
+                            includeFontPadding = false
+                        ),
+                        lineHeightStyle = LineHeightStyle(
+                            alignment = LineHeightStyle.Alignment.Center,
+                            trim = LineHeightStyle.Trim.Both
+                        )
+                    )
+                )
             )
 
             Icon(
@@ -433,6 +433,8 @@ fun WeatherSummaryCircle(
                 tint = Color.Unspecified,
                 modifier = Modifier.size(125.dp)
             )
+
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
@@ -442,28 +444,64 @@ fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf()) {
     hours?.add(Hour())
     hours?.add(Hour())
     hours?.add(Hour())
+    hours?.add(Hour())
+    hours?.add(Hour())
+    hours?.add(Hour())
 
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                BorderStroke(1.dp, Color.White), shape = RoundedCornerShape(
-                    0.dp, 15.dp, 15.dp, 15.dp
-                )
-            ),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        hours?.let {
-            items(items = hours) {
-                HourlyRowItem(it)
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Today",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 20.sp
+                ),
+                color = colorResource(id = R.color.wa_blackWhite),
+                modifier = Modifier.padding(horizontal = 10.dp),
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(R.string.next_7_days),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.secondary,
+                //color = colorResource(id = R.color.wa_secondary),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .wrapContentHeight(),
+                textAlign = TextAlign.Center
+            )
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .height(25.dp)
+                    .padding(top = 5.dp)
+            )
+        }
+        LazyRow(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(18.dp)
+        ) {
+            hours?.let {
+                items(items = hours) {
+                    HourlyRowItem(it)
+                }
             }
         }
     }
 }
 
-
 @Composable
-fun HourlyRowItem(hour: Hour = Hour()) {
+fun HourlyRowItem_old(hour: Hour = Hour()) {
     Column(
         modifier = Modifier.padding(vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -471,23 +509,25 @@ fun HourlyRowItem(hour: Hour = Hour()) {
     ) {
         Column(
             modifier = Modifier
-                .size(70.dp)
+                .size(60.dp)
                 .border(
-                    BorderStroke(1.dp, Color.White),
+                    BorderStroke(1.dp, colorResource(id = R.color.wa_secondary)),
                     shape = RoundedCornerShape(10.dp)
                 ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "${hour.tempC ?: "27"}°",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onPrimary
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontSize = 20.sp
+                ),
+                color = colorResource(id = R.color.wa_secondary)
             )
             hour.time?.split(" ")?.get(1)?.let {
                 Text(
                     text = it,
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = colorResource(id = R.color.wa_secondary)
                 )
             }
         }
@@ -497,6 +537,105 @@ fun HourlyRowItem(hour: Hour = Hour()) {
             tint = Color.Unspecified,
             modifier = Modifier.size(30.dp)
         )
+    }
+}
+
+@Composable
+fun AdditionalInfoRow(humidity: Int? = 80, windSpeed: Double? = 20.0, visibility: Int? = 10) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(25.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AdditionalInfoItem("${humidity}%", com.optmizedcode.assets.R.drawable.drizzle)
+        AdditionalInfoItem("${windSpeed?.toInt()}km/h", com.optmizedcode.assets.R.drawable.breezy)
+        AdditionalInfoItem("${visibility}km", com.optmizedcode.assets.R.drawable.visibility)
+    }
+}
+
+@Composable
+fun AdditionalInfoItem(value: String, icon: Int) {
+    Column(
+        modifier = Modifier.width(55.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .width(55.dp)
+                .height(55.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface //colorResource(id = R.color.white_90)
+            ),
+            shape = RoundedCornerShape(15.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .padding(10.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxSize()
+            )
+        }
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleMedium,
+            color = colorResource(id = R.color.wa_blackWhite),
+        )
+    }
+}
+
+@Composable
+fun HourlyRowItem(hour: Hour = Hour(time = "123 00:00")) {
+    ElevatedCard(
+        modifier = Modifier
+            .padding(vertical = 10.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = colorResource(id = R.color.wa_whiteBlack)
+        ),
+        shape = RoundedCornerShape(40.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier.width(55.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "00:00",
+                style = MaterialTheme.typography.headlineSmall,
+                color = colorResource(id = R.color.wa_secondary),
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            Icon(
+                painter = painterResource(id = com.optmizedcode.assets.R.drawable.cloud_3d_200),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.size(30.dp)
+            )
+            Text(
+                text = "${hour.tempC ?: "27"}°",
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontSize = 20.sp,
+                    letterSpacing = 0.sp
+                ),
+                color = colorResource(id = R.color.wa_secondary),
+                modifier = Modifier.padding(bottom = 5.dp),
+                textAlign = TextAlign.Center
+            )
+
+
+//            hour.time?.split(" ")?.get(1)?.let {
+//                Text(
+//                    text = it,
+//                    style = MaterialTheme.typography.headlineSmall,
+//                    color = colorResource(id = R.color.wa_secondary)
+//                )
+//            }
+        }
     }
 }
 
