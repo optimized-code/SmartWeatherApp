@@ -61,7 +61,11 @@ data class Condition(
     var text: String? = null,
     var icon: String? = null,
     var code: Int? = null
-)
+){
+    fun getIconName(): String{
+        return "$code"
+    }
+}
 
 data class AirQuality(
     var co: Double? = null,

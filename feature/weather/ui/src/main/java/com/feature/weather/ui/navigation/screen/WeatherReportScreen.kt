@@ -1,7 +1,6 @@
 package com.feature.weather.ui.navigation.screen
 
 import android.content.res.Configuration
-import android.graphics.drawable.shapes.OvalShape
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,9 +32,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -48,11 +46,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -62,19 +59,16 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.feature.weather.domain.model.Current
 import com.feature.weather.domain.model.Hour
 import com.feature.weather.domain.model.Location
 import com.feature.weather.ui.R
 import com.feature.weather.ui.navigation.faketheme.theme.SmartWeatherForcastAppTheme_Fake
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
 /*
 **************************************************************
@@ -107,9 +101,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 annotation class DarkLightPreviews
 
 
+//@DarkLightPreviews
 //@Preview(name = "5-inch Device Landscape", widthDp = 640, heightDp = 360)
-//@Preview(name = "5-inch Device Portrait", widthDp = 360, heightDp = 640)
-@DarkLightPreviews
+@Preview(name = "5-inch Device Portrait", widthDp = 360, heightDp = 640)
 @Composable
 fun WeatherReportScreen_onlyForPreview() {
     val landscape = false
@@ -142,18 +136,9 @@ fun Portrait() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(20.dp)
-//                    .verticalScroll(rememberScrollState()),
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                verticalArrangement = Arrangement.spacedBy(25.dp)
-//            ) {
             WeatherSummaryCircle()
             AdditionalInfoRow()
             HourlyForecast()
-//            }
         }
     }
 }
@@ -217,7 +202,8 @@ fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
             result.success?.let {
                 WeatherSummaryCircle(it.location, it.current)
                 AdditionalInfoRow(it.current.humidity, it.current.windKph, it.current.visKm)
-                HourlyForecast(it.forecast[0].hour)
+                viewModel.checkHourChange()
+                HourlyForecast(it.forecast[0].hour, viewModel.currentHour)
             }
         }
     }
@@ -390,7 +376,7 @@ fun WeatherSummaryCircle(
                     modifier = Modifier.height(95.dp)
                 )
                 Text(
-                    text = "Feels like ${current.feelslikeC}",
+                    text = "Feels like ${current.feelslikeC ?: "29"}°",
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -440,13 +426,13 @@ fun WeatherSummaryCircle(
 }
 
 @Composable
-fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf()) {
-    hours?.add(Hour())
-    hours?.add(Hour())
-    hours?.add(Hour())
-    hours?.add(Hour())
-    hours?.add(Hour())
-    hours?.add(Hour())
+fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf(), currentHour: Int = 0) {
+//    hours?.add(Hour())
+//    hours?.add(Hour())
+//    hours?.add(Hour())
+//    hours?.add(Hour())
+//    hours?.add(Hour())
+//    hours?.add(Hour())
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -470,7 +456,6 @@ fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf()) {
                 text = stringResource(R.string.next_7_days),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.secondary,
-                //color = colorResource(id = R.color.wa_secondary),
                 modifier = Modifier
                     .fillMaxHeight()
                     .wrapContentHeight(),
@@ -485,17 +470,25 @@ fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf()) {
                     .padding(top = 5.dp)
             )
         }
+
+        val listState = rememberLazyListState()
         LazyRow(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(18.dp)
+            horizontalArrangement = Arrangement.spacedBy(18.dp),
+            state = listState
         ) {
             hours?.let {
                 items(items = hours) {
-                    HourlyRowItem(it)
+                    HourlyRowItem(it, currentHour)
                 }
             }
+        }
+
+        LaunchedEffect(key1 = currentHour) {
+            delay(1500)
+            listState.animateScrollToItem(currentHour)
         }
     }
 }
@@ -517,7 +510,7 @@ fun HourlyRowItem_old(hour: Hour = Hour()) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "${hour.tempC ?: "27"}°",
+                text = "${hour.tempC?.roundToInt() ?: "27"}°",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 20.sp
                 ),
@@ -587,12 +580,25 @@ fun AdditionalInfoItem(value: String, icon: Int) {
 }
 
 @Composable
-fun HourlyRowItem(hour: Hour = Hour(time = "123 00:00")) {
+fun HourlyRowItem(hour: Hour, currentHour: Int) {
+    val time = hour.time?.split(" ")?.get(1)
+    val incomingHour = time?.split(":")?.get(0)?.toInt()
+    val textColor = if (incomingHour == currentHour) {
+        colorResource(id = R.color.white)
+    } else {
+        colorResource(id = R.color.wa_secondary)
+    }
+
     ElevatedCard(
         modifier = Modifier
             .padding(vertical = 10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.wa_whiteBlack)
+            containerColor = if (incomingHour == currentHour) {
+                colorResource(id = R.color.wa_secondary)
+            } else {
+                colorResource(id = R.color.wa_whiteBlack)
+            }
+
         ),
         shape = RoundedCornerShape(40.dp),
         elevation = CardDefaults.cardElevation(
@@ -604,42 +610,98 @@ fun HourlyRowItem(hour: Hour = Hour(time = "123 00:00")) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "00:00",
-                style = MaterialTheme.typography.headlineSmall,
-                color = colorResource(id = R.color.wa_secondary),
-                modifier = Modifier.padding(top = 8.dp)
-            )
+            hour.time?.split(" ")?.get(1)?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = textColor,
+                    modifier = Modifier.padding(top = 7.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
             Icon(
-                painter = painterResource(id = com.optmizedcode.assets.R.drawable.cloud_3d_200),
+                painter = painterResource(id = getWeatherIcon(hour.condition?.code)),
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier.size(30.dp)
             )
             Text(
-                text = "${hour.tempC ?: "27"}°",
+                text = "${hour.tempC?.roundToInt() ?: "27"}°",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 20.sp,
                     letterSpacing = 0.sp
                 ),
-                color = colorResource(id = R.color.wa_secondary),
+                color = textColor,
                 modifier = Modifier.padding(bottom = 5.dp),
                 textAlign = TextAlign.Center
             )
-
-
-//            hour.time?.split(" ")?.get(1)?.let {
-//                Text(
-//                    text = it,
-//                    style = MaterialTheme.typography.headlineSmall,
-//                    color = colorResource(id = R.color.wa_secondary)
-//                )
-//            }
         }
     }
 }
 
+//fun isCurrentHour(): Int {
+//    val calender: Calendar = Calendar.getInstance()
+//    return calender.get(Calendar.HOUR_OF_DAY)
+//}
+
 @Composable
 fun DayWiseForecast() {
     /* TODO */
+}
+
+
+fun getWeatherIcon(code: Int?): Int {
+    return when (code) {
+        1000 -> com.optmizedcode.assets.R.drawable.ic_1000
+        1003 -> com.optmizedcode.assets.R.drawable.ic_1003
+        1006 -> com.optmizedcode.assets.R.drawable.ic_1006
+        1009 -> com.optmizedcode.assets.R.drawable.ic_1009
+        1030 -> com.optmizedcode.assets.R.drawable.ic_1030
+        1063 -> com.optmizedcode.assets.R.drawable.ic_1063
+        1066 -> com.optmizedcode.assets.R.drawable.ic_1066
+        1069 -> com.optmizedcode.assets.R.drawable.ic_1069
+        1072 -> com.optmizedcode.assets.R.drawable.ic_1072
+        1087 -> com.optmizedcode.assets.R.drawable.ic_1087
+        1114 -> com.optmizedcode.assets.R.drawable.ic_1114
+        1117 -> com.optmizedcode.assets.R.drawable.ic_1117
+        1135 -> com.optmizedcode.assets.R.drawable.ic_1135
+        1147 -> com.optmizedcode.assets.R.drawable.ic_1147
+        1150 -> com.optmizedcode.assets.R.drawable.ic_1150
+        1153 -> com.optmizedcode.assets.R.drawable.ic_1153
+        1168 -> com.optmizedcode.assets.R.drawable.ic_1168
+        1171 -> com.optmizedcode.assets.R.drawable.ic_1171
+        1188 -> com.optmizedcode.assets.R.drawable.ic_1180
+        1183 -> com.optmizedcode.assets.R.drawable.ic_1183
+        1186 -> com.optmizedcode.assets.R.drawable.ic_1186
+        1189 -> com.optmizedcode.assets.R.drawable.ic_1189
+        1192 -> com.optmizedcode.assets.R.drawable.ic_1192
+        1195 -> com.optmizedcode.assets.R.drawable.ic_1195
+        1198 -> com.optmizedcode.assets.R.drawable.ic_1198
+        1201 -> com.optmizedcode.assets.R.drawable.ic_1201
+        1204 -> com.optmizedcode.assets.R.drawable.ic_1204
+        1207 -> com.optmizedcode.assets.R.drawable.ic_1207
+        1210 -> com.optmizedcode.assets.R.drawable.ic_1210
+        1213 -> com.optmizedcode.assets.R.drawable.ic_1213
+        1216 -> com.optmizedcode.assets.R.drawable.ic_1216
+        1219 -> com.optmizedcode.assets.R.drawable.ic_1219
+        1222 -> com.optmizedcode.assets.R.drawable.ic_1222
+        1225 -> com.optmizedcode.assets.R.drawable.ic_1225
+        1237 -> com.optmizedcode.assets.R.drawable.ic_1237
+        1240 -> com.optmizedcode.assets.R.drawable.ic_1240
+        1243 -> com.optmizedcode.assets.R.drawable.ic_1243
+        1246 -> com.optmizedcode.assets.R.drawable.ic_1246
+        1249 -> com.optmizedcode.assets.R.drawable.ic_1249
+        1252 -> com.optmizedcode.assets.R.drawable.ic_1252
+        1255 -> com.optmizedcode.assets.R.drawable.ic_1255
+        1258 -> com.optmizedcode.assets.R.drawable.ic_1258
+        1261 -> com.optmizedcode.assets.R.drawable.ic_1261
+        1264 -> com.optmizedcode.assets.R.drawable.ic_1264
+        1273 -> com.optmizedcode.assets.R.drawable.ic_1273
+        1276 -> com.optmizedcode.assets.R.drawable.ic_1276
+        1279 -> com.optmizedcode.assets.R.drawable.ic_1279
+        1282 -> com.optmizedcode.assets.R.drawable.ic_1282
+        else -> {
+            com.optmizedcode.assets.R.drawable.ic_1000
+        }
+    }
 }

@@ -18,7 +18,12 @@ import retrofit2.http.Query
  ***************************************************************
  */
 
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class FakeRestApi(val fileName: String)
+
 interface ApiService {
+
     @GET(Endpoints.WEATHER_REPORT)
     suspend fun getWeatherReportData(
         @Query("key") key: String,
