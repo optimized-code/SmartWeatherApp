@@ -1,6 +1,7 @@
 package com.optmizedcode.smartweatherforcast.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -151,94 +152,136 @@ val CairoTypography = Typography(
 
 val JosefinTypography = Typography(
     displayLarge = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     displayMedium = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     displaySmall = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
 
     headlineLarge = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     headlineMedium = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     headlineSmall = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
 
     titleLarge = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp
     ),
     titleMedium = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 14.sp
+        fontSize = 14.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     titleSmall = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 12.sp
+        fontSize = 12.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
 
     bodyLarge = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     bodyMedium = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp
+        fontSize = 14.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     bodySmall = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
+        fontSize = 12.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
 
     labelLarge = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     labelMedium = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp
+        fontSize = 14.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     labelSmall = TextStyle(
-        fontFamily = josefinFontFamily,
+        fontFamily = com.feature.weather.ui.navigation.faketheme.theme.josefinFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 12.sp
+        fontSize = 12.sp,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     )
 )

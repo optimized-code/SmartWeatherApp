@@ -31,9 +31,9 @@ import kotlin.concurrent.schedule
  */
 
 @HiltViewModel
-class TodayWeatherReportViewModel @Inject constructor(private val getWeatherReportDataUseCase: GetWeatherReportDataUseCase) :
-    ViewModel() {
-
+class TodayWeatherReportViewModel @Inject constructor(
+    private val getWeatherReportDataUseCase: GetWeatherReportDataUseCase
+) : ViewModel() {
     private val timer: Timer
 
     init {

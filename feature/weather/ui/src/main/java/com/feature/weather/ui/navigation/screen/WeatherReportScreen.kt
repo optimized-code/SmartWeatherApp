@@ -1,6 +1,7 @@
 package com.feature.weather.ui.navigation.screen
 
 import android.content.res.Configuration
+import android.util.Config
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +35,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalAbsoluteTonalElevation
@@ -59,15 +61,19 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.feature.weather.domain.model.Current
+import com.feature.weather.domain.model.Forecastday
 import com.feature.weather.domain.model.Hour
 import com.feature.weather.domain.model.Location
 import com.feature.weather.ui.R
 import com.feature.weather.ui.navigation.faketheme.theme.SmartWeatherForcastAppTheme_Fake
 import kotlinx.coroutines.delay
+import java.util.Locale
 import kotlin.math.roundToInt
 
 /*
@@ -134,11 +140,54 @@ fun Portrait() {
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             WeatherSummaryCircle()
             AdditionalInfoRow()
             HourlyForecast()
+
+            Row(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                LinearLabelsSingleAttributeItem(
+                    icon = com.optmizedcode.assets.R.drawable.ic_wb_sunny,
+                    heading = stringResource(R.string.uv_index),
+                    value = "8",
+                    valueDescription = getUVIndexIntensity(8).getString(),
+                    shortDescription = getUVIndexMessage(8).getString()
+                )
+                LinearLabelsSingleAttributeItem(
+                    icon = com.optmizedcode.assets.R.drawable.ic_vector_thermostat,
+                    heading = stringResource(R.string.feels_like),
+                    value = "27°",
+                    valueDescription = "",
+                    shortDescription = getFeelsLikeMessage(27, 27).getString()
+                )
+            }
+
+            Row(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                LinearLabelsSingleAttributeItem(
+                    icon = com.optmizedcode.assets.R.drawable.ic_water_drop,
+                    heading = stringResource(R.string.precipitation),
+                    value = "0 mm",
+                    valueDescription = "in last 24hr",
+                    shortDescription = getPrecipitationMessage(arrayListOf()).getString()
+                )
+
+                LinearLabelsSingleAttributeItem(
+                    icon = com.optmizedcode.assets.R.drawable.ic_vector_sunrise_1,
+                    heading = stringResource(R.string.sun_rise),
+                    value = "06:53",
+                    valueDescription = stringResource(R.string.sunset),
+                    shortDescription = "07:01"
+                )
+            }
+
+            WindInfoItem(8, 20)
         }
     }
 }
@@ -204,6 +253,53 @@ fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
                 AdditionalInfoRow(it.current.humidity, it.current.windKph, it.current.visKm)
                 viewModel.checkHourChange()
                 HourlyForecast(it.forecast[0].hour, viewModel.currentHour)
+
+                val uvIndex = it.current.uv ?: 0
+                val feelsLike = it.current.feelslikeC?.toInt() ?: 0
+                val actualTemp = it.current.tempC ?: 0
+                val precipitation = it.current.precipIn ?: 0
+
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    LinearLabelsSingleAttributeItem(
+                        icon = com.optmizedcode.assets.R.drawable.ic_wb_sunny,
+                        heading = stringResource(R.string.uv_index),
+                        value = uvIndex.toString(),
+                        valueDescription = getUVIndexIntensity(uvIndex).getString(),
+                        shortDescription = getUVIndexMessage(uvIndex).getString()
+                    )
+                    LinearLabelsSingleAttributeItem(
+                        icon = com.optmizedcode.assets.R.drawable.ic_water_drop,
+                        heading = stringResource(R.string.feels_like),
+                        value = "${feelsLike}°",
+                        valueDescription = "",
+                        shortDescription = getFeelsLikeMessage(actualTemp, feelsLike).getString()
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    LinearLabelsSingleAttributeItem(
+                        icon = com.optmizedcode.assets.R.drawable.ic_water_drop,
+                        heading = stringResource(R.string.pressure),
+                        value = "$precipitation mm",
+                        valueDescription = stringResource(R.string.in_last_24hr),
+                        shortDescription = getPrecipitationMessage(it.forecast).getString()
+                    )
+                    LinearLabelsSingleAttributeItem(
+                        icon = com.optmizedcode.assets.R.drawable.ic_vector_sunrise_1,
+                        heading = stringResource(R.string.sun_rise),
+                        value = it.forecast[0].astro?.sunrise ?: "",
+                        valueDescription = stringResource(R.string.sunset),
+                        shortDescription = it.forecast[0].astro?.sunset ?: ""
+                    )
+                }
+
+                WindInfoItem(it.current.windKph?.toInt() ?: 0, it.current.gustKph?.toInt() ?: 0)
             }
         }
     }
@@ -319,19 +415,6 @@ fun AppNavigationBar() {
 }
 
 @Composable
-fun gradientBg(): Brush {
-
-    val colorStops = arrayOf(
-        0.2f to MaterialTheme.colorScheme.surface,
-        1f to colorResource(id = R.color.wa_secondary)
-    )
-
-    return Brush.linearGradient(
-        colorStops = colorStops,
-    )
-}
-
-@Composable
 fun summaryCircleGradientBg(): Brush {
     return Brush.verticalGradient(
         colors = listOf(
@@ -342,9 +425,7 @@ fun summaryCircleGradientBg(): Brush {
 }
 
 @Composable
-fun WeatherSummaryCircle(
-    location: Location = Location(), current: Current = Current()
-) {
+fun WeatherSummaryCircle(location: Location = Location(), current: Current = Current()) {
     Box {
         ElevatedCard(
             modifier = Modifier
@@ -389,7 +470,7 @@ fun WeatherSummaryCircle(
         }
         Row(
             modifier = Modifier
-                .height(140.dp)
+                .height(160.dp)
                 .fillMaxWidth()
                 .align(Alignment.CenterEnd),
             verticalAlignment = Alignment.CenterVertically,
@@ -427,12 +508,8 @@ fun WeatherSummaryCircle(
 
 @Composable
 fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf(), currentHour: Int = 0) {
-//    hours?.add(Hour())
-//    hours?.add(Hour())
-//    hours?.add(Hour())
-//    hours?.add(Hour())
-//    hours?.add(Hour())
-//    hours?.add(Hour())
+    hours?.add(Hour())
+    hours?.add(Hour())
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -494,46 +571,6 @@ fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf(), currentHour: Int = 0
 }
 
 @Composable
-fun HourlyRowItem_old(hour: Hour = Hour()) {
-    Column(
-        modifier = Modifier.padding(vertical = 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .size(60.dp)
-                .border(
-                    BorderStroke(1.dp, colorResource(id = R.color.wa_secondary)),
-                    shape = RoundedCornerShape(10.dp)
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "${hour.tempC?.roundToInt() ?: "27"}°",
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    fontSize = 20.sp
-                ),
-                color = colorResource(id = R.color.wa_secondary)
-            )
-            hour.time?.split(" ")?.get(1)?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = colorResource(id = R.color.wa_secondary)
-                )
-            }
-        }
-        Icon(
-            painter = painterResource(id = com.optmizedcode.assets.R.drawable.cloud_3d_200),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier.size(30.dp)
-        )
-    }
-}
-
-@Composable
 fun AdditionalInfoRow(humidity: Int? = 80, windSpeed: Double? = 20.0, visibility: Int? = 10) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(25.dp),
@@ -575,6 +612,7 @@ fun AdditionalInfoItem(value: String, icon: Int) {
             text = value,
             style = MaterialTheme.typography.titleMedium,
             color = colorResource(id = R.color.wa_blackWhite),
+            modifier = Modifier.padding(top = 5.dp)
         )
     }
 }
@@ -606,7 +644,7 @@ fun HourlyRowItem(hour: Hour, currentHour: Int) {
         )
     ) {
         Column(
-            modifier = Modifier.width(55.dp),
+            modifier = Modifier.width(55.dp).height(100.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -639,18 +677,265 @@ fun HourlyRowItem(hour: Hour, currentHour: Int) {
     }
 }
 
-//fun isCurrentHour(): Int {
-//    val calender: Calendar = Calendar.getInstance()
-//    return calender.get(Calendar.HOUR_OF_DAY)
-//}
-
 @Composable
-fun DayWiseForecast() {
-    /* TODO */
+fun LinearLabelsSingleAttributeItem(
+    icon: Int = com.optmizedcode.assets.R.drawable.ic_1000,
+    heading: String = "Heading",
+    value: String = "0",
+    valueDescription: String = "Low",
+    shortDescription: String = "Use sun protection 9AM - 4PM."
+) {
+    ElevatedCard(
+        modifier = Modifier.size(150.dp).background(Color.Transparent),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        // heading
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 5.dp)
+                .height(30.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null, tint = Color.DarkGray,
+                modifier = Modifier
+                    .size(25.dp)
+                    .padding(5.dp)
+            )
+            Text(
+                text = heading,
+                style = MaterialTheme.typography.titleSmall,
+                color = Color.DarkGray,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp).background(Color.Transparent)
+        ) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 30.sp
+                ),
+                color = colorResource(id = R.color.purple_500),
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = valueDescription,
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.DarkGray,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = shortDescription,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.DarkGray
+            )
+        }
+    }
 }
 
+@Composable
+fun WindInfoItem(windKm: Int, gustKm: Int) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 25.dp)
+            .height(140.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        // heading
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 5.dp)
+                .height(30.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                painter = painterResource(id = com.optmizedcode.assets.R.drawable.ic_vector_wind),
+                contentDescription = null, tint = Color.DarkGray,
+                modifier = Modifier
+                    .size(25.dp)
+                    .padding(5.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.wind),
+                style = MaterialTheme.typography.titleSmall,
+                color = Color.DarkGray,
+                textAlign = TextAlign.Center
+            )
+        }
 
-fun getWeatherIcon(code: Int?): Int {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp, start = 10.dp, end = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = "$windKm",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 40.sp,
+                        lineHeight = 0.5.em,
+                        platformStyle = PlatformTextStyle(
+                            includeFontPadding = false
+                        ),
+                        lineHeightStyle = LineHeightStyle(
+                            alignment = LineHeightStyle.Alignment.Center,
+                            trim = LineHeightStyle.Trim.Both
+                        )
+                    ),
+                    color = colorResource(id = R.color.purple_500)
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(5.dp)){
+                    Text(
+                        text = stringResource(R.string.km_h),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = Color.DarkGray,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = stringResource(id = R.string.wind).toLowerCase(Locale.ENGLISH),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.DarkGray
+                    )
+                }
+            }
+
+            Divider(color = Color.LightGray, thickness = 1.dp)
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = "$gustKm",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 40.sp,
+                        lineHeight = 0.5.em,
+                        platformStyle = PlatformTextStyle(
+                            includeFontPadding = false
+                        ),
+                        lineHeightStyle = LineHeightStyle(
+                            alignment = LineHeightStyle.Alignment.Center,
+                            trim = LineHeightStyle.Trim.Both
+                        )
+                    ),
+                    color = colorResource(id = R.color.purple_500)
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(5.dp)){
+                    Text(
+                        text = stringResource(R.string.km_h),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = Color.DarkGray,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = stringResource(R.string.gust),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.DarkGray
+                    )
+                }
+            }
+        }
+    }
+}
+
+// BACKGROUNDS ////////////////////////////////////////////////////////////////
+@Composable
+fun gradientBg(): Brush {
+
+    val colorStops = arrayOf(
+        0.2f to MaterialTheme.colorScheme.surface,
+        1f to colorResource(id = R.color.wa_secondary)
+    )
+
+    return Brush.linearGradient(
+        colorStops = colorStops,
+    )
+}
+
+// HELPER FUNCTIONS ///////////////////////////////////////////////////////////
+fun getPrecipitationMessage(days: ArrayList<Forecastday>): UiText{
+    for (day in days){
+        day.day?.let {
+            if ((it.totalprecip_mm ?: 0.0) > 0.0){
+                return UiText.StringResourceValue(R.string.expected_mm_rain_on, it.totalprecip_mm ?: 0.0, day.date ?: "")
+            }
+        }
+    }
+
+    return UiText.StringResourceValue(R.string.no_rain_expected)
+}
+fun getUVIndexMessage(uvIndex: Int): UiText{
+    return if (uvIndex <= 2){
+        UiText.StringResourceValue(R.string.no_need_to_use_sun_protection)
+    }
+    else if (uvIndex in 3..5) {
+        UiText.StringResourceValue(R.string.use_sun_protection_between_9am_2pm)
+    }
+    else if (uvIndex in 6..7) {
+        UiText.StringResourceValue(R.string.use_sun_protection_between_9am_3pm)
+    }
+    else if (uvIndex in 8..10) {
+        UiText.StringResourceValue(R.string.use_sun_protection_between_9am_4pm)
+    }
+    else if (uvIndex in 11..100) {
+        UiText.StringResourceValue(R.string.avoid_direct_sunlight_interaction)
+    }
+    else {
+        UiText.StringResourceValue(R.string.use_sun_protection_to_be_safe)
+    }
+}
+fun getFeelsLikeMessage(actualTemp: Int, feelsLikeTemp: Int): UiText{
+    return if (actualTemp == feelsLikeTemp){
+        UiText.StringResourceValue(R.string.similar_to_the_actual_temperature)
+    }
+    else if (actualTemp > feelsLikeTemp){
+        UiText.StringResourceValue(R.string.wind_is_making_it_cooler)
+    }
+    else {
+        UiText.StringResourceValue(R.string.humidity_is_making_it_warmer)
+    }
+}
+fun getUVIndexIntensity(uvIndex: Int): UiText{
+    return if (uvIndex <= 2){
+        UiText.StringResourceValue(R.string.low)
+    }
+    else if (uvIndex in 3..5) {
+        UiText.StringResourceValue(R.string.moderate)
+    }
+    else if (uvIndex in 6..7) {
+        UiText.StringResourceValue(R.string.high)
+    }
+    else if (uvIndex in 8..10) {
+        UiText.StringResourceValue(R.string.very_high)
+    }
+    else if (uvIndex in 11..100) {
+        UiText.StringResourceValue(R.string.extreme)
+    }
+    else {
+        UiText.StringResourceValue(R.string.low)
+    }
+}
+fun getWeatherIcon(code: Int?): Int{
     return when (code) {
         1000 -> com.optmizedcode.assets.R.drawable.ic_1000
         1003 -> com.optmizedcode.assets.R.drawable.ic_1003

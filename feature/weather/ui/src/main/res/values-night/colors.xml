@@ -14,4 +14,5 @@
     <color name="wa_secondary">#5875df</color>
     <color name="wa_blackWhite">#FFFFFFFF</color>
     <color name="wa_whiteBlack">#232B30</color>
+    <color name="wa_lightBlue">#90AECDFF</color>
 </resources>

@@ -63,7 +63,7 @@ fun SmartWeatherForcastAppTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = CairoTypography,
+        typography = JosefinTypography,
         content = content
     )
 }
