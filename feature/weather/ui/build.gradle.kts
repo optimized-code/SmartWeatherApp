@@ -62,10 +62,8 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.ui.tooling)
     implementation(libs.compose.material)
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha13")
-
-
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.constraintlayout)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

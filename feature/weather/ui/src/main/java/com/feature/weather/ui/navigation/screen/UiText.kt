@@ -6,13 +6,13 @@ import androidx.compose.ui.res.stringResource
 
 /*
 **************************************************************
- * www.optimizedcode.com 
+ * www.optimizedcode.io
  * Kotlin
  *
  * @author ehtisham
  * @package com.feature.weather.ui.navigation.screen
  * @date 31-Oct-2023
- * @copyright 2023 Optimized code (https://www.optmizedcode.com)
+ * @copyright 2023 Optimized code (https://www.optimizedcode.io)
  * @license Open source
  ***************************************************************
  */
@@ -28,7 +28,7 @@ sealed class UiText {
                 str
             }
             is StringResourceValue -> {
-                stringResource(id = str, args)
+                stringResource(id = str, *args)
             }
         }
 

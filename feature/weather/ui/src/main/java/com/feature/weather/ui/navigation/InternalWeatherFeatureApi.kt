@@ -10,13 +10,13 @@ import com.optmizedcode.core.common.navigation_constant.WeatherFeature
 
 /*
 **************************************************************
- * www.optmizedcode.com 
+ * www.optimizedcode.io
  * Kotlin
  *
  * @author ehtisham
  * @package com.feature.weather.ui.navigation
  * @date 18-Sep-2023
- * @copyright 2023 Optimized code (https://www.optmizedcode.com)
+ * @copyright 2023 Optimized code (https://www.optimizedcode.io)
  * @license Open source
  ***************************************************************
  */

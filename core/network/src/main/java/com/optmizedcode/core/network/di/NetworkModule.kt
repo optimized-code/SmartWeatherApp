@@ -24,13 +24,13 @@ import java.security.NoSuchAlgorithmException
 
 /*
 **************************************************************
- * www.optmizedcode.com 
+ * www.optimizedcode.io
  * Kotlin
  *
  * @author ehtisham
  * @package com.optmizedcode.core.network.di
  * @date 10-Sep-2023
- * @copyright 2023 Optimized code (https://www.optmizedcode.com)
+ * @copyright 2023 Optimized code (https://www.optimizedcode.io)
  * @license Open source
  ***************************************************************
  */
@@ -44,9 +44,9 @@ object NetworkModule {
     private const val DEFAULT_WRITE_TIMEOUT_IN_SEC = 60 * CONNECT_TIMEOUT_MULTIPLIER
     private const val DEFAULT_READ_TIMEOUT_IN_SEC = 60 * CONNECT_TIMEOUT_MULTIPLIER
     private const val NO_OF_LOG_CHAR = 2000
-    const val API_USER_NAME = "optimized_code"
-    const val API_PASSWORD = "WwF4HJWh9pr0ry0v"
-    const val API_AUTH_TYPE = "sha256"
+    private const val API_USER_NAME = "optimized_code"
+    private const val API_PASSWORD = "WwF4HJWh9pr0ry0v"
+    private const val API_AUTH_TYPE = "sha256"
     private val sDispatcher: Dispatcher? = null
     private var authKey: String = ""
     private const val TAG = "Weather_Network"

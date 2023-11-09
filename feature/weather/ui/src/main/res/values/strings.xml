@@ -11,6 +11,7 @@
     <string name="sun_rise">SUNRISE</string>
     <string name="precipitation">PRECIPITATION</string>
     <string name="wind">WIND</string>
+    <string name="wind_1">Wind</string>
     <string name="moon">MOON</string>
     <string name="in_last_24hr">In last 24Hr</string>
     <string name="no_rain_expected">No rain expected</string>
@@ -32,4 +33,5 @@
     <string name="sunset">Sunset</string>
     <string name="gust">Gust</string>
     <string name="km_h">KM/H</string>
+    <string name="today">Today</string>
 </resources>

@@ -6,14 +6,14 @@ gVersionCode = "1"
 gVersionName = "1.0.0"
 hVersionCode = "1"
 hVersionName = "1.0.0"
-v-hilt = "2.47"
+v-hilt = "2.48"
 v-android-gradle-plugin = "8.1.0"
 v-org-jetbrains-kotlin-android = "1.8.10"
 v-junit = "4.13.2"
 v-ext-junit = "1.1.5"
 v-espresso = "3.5.1"
 v-core-ktx = "1.12.0"
-v-compose = "2023.10.00"
+v-compose = "2023.10.01"
 v-compose-activity = "1.8.0"
 v-lifecycle-runtime-ktx = "2.6.2"
 runner = "1.0.2"
@@ -27,6 +27,8 @@ v-core-jackson = "2.12.3"
 appcompat = "1.6.1"
 material = "1.10.0"
 v-nav-version = "2.7.4"
+v-hilt-navigation-compose = "1.1.0"
+v-constraintlayout = "2.2.0-alpha13"
 
 
 [libraries]
@@ -59,7 +61,8 @@ jackson-annotations = {module = "com.fasterxml.jackson.core:jackson-annotations"
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "v-nav-version" }
-
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "v-hilt-navigation-compose" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "v-constraintlayout" }
 
 
 [bundles]

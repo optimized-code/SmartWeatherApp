@@ -2,13 +2,13 @@ package com.feature.weather.domain.model
 
 /*
 **************************************************************
- * www.optmizedcode.com 
+ * www.optimizedcode.io
  * Kotlin
  *
  * @author ehtisham
  * @package com.feature.domain.model
  * @date 15-Sep-2023
- * @copyright 2023 Optimized code (https://www.optmizedcode.com)
+ * @copyright 2023 Optimized code (https://www.optimizedcode.io)
  * @license Open source
  ***************************************************************
  */
