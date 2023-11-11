@@ -1,7 +1,12 @@
 package com.feature.weather.ui.navigation.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -29,12 +34,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.feature.weather.ui.R
 import com.feature.weather.ui.navigation.composables.AdditionalInfoRow
 import com.feature.weather.ui.navigation.composables.HourlyForecast
@@ -172,6 +183,50 @@ fun Landscape() {
 }
 
 @Composable
+fun InitViewWeather() {
+
+    val isGranted = ContextCompat.checkSelfPermission(
+        LocalContext.current,
+        Manifest.permission.CAMERA
+    ) == PackageManager.PERMISSION_GRANTED
+
+
+    val isGrantedState = remember {
+        mutableStateOf(
+            isGranted
+        )
+    }
+
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = {
+            isGrantedState.value = it
+        }
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = gradientBg()
+            )
+    )
+    {
+        if (isGrantedState.value){
+            val viewModel = hiltViewModel<TodayWeatherReportViewModel>()
+            WeatherReportScreen(viewModel = viewModel)
+        } else {
+            LaunchedEffect(key1 = locationPermissionLauncher){
+                locationPermissionLauncher.launch(
+                    Manifest.permission.CAMERA
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
 fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
     val result = viewModel.weatherReportData.value
     Scaffold(
@@ -192,6 +247,7 @@ fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
+
             if (result.isLoading) {
                 CircularProgressIndicator()
             }
@@ -227,7 +283,10 @@ fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
                         heading = stringResource(R.string.feels_like),
                         value = "${feelsLike}°",
                         valueDescription = "",
-                        shortDescription = getFeelsLikeMessage(actualTemp, feelsLike).getString()
+                        shortDescription = getFeelsLikeMessage(
+                            actualTemp,
+                            feelsLike
+                        ).getString()
                     )
                 }
 
@@ -303,6 +362,7 @@ fun AppNavigationRail() {
         }
     }
 }
+
 @Composable
 fun AppNavigationBar() {
     NavigationBar(

@@ -401,8 +401,8 @@ fun WindInfoItem(windKm: Int, gustKm: Int) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 25.dp)
-            .height(140.dp),
+            .padding(horizontal = 25.dp),
+            //.height(140.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

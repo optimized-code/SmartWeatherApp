@@ -34,11 +34,10 @@ import kotlin.concurrent.schedule
 class TodayWeatherReportViewModel @Inject constructor(
     private val getWeatherReportDataUseCase: GetWeatherReportDataUseCase
 ) : ViewModel() {
-    private val timer: Timer
+    private val timer: Timer = Timer("CheckCurrentHour", true)
 
     init {
         getWeatherReport()
-        timer = Timer("CheckCurrentHour", true)
     }
 
     private val _currentHour = mutableIntStateOf(getCalenderCurrentHour())
@@ -49,7 +48,7 @@ class TodayWeatherReportViewModel @Inject constructor(
     val weatherReportData: State<WeatherReportStateHolder>
         get() = _weatherReportData
 
-    private fun getWeatherReport() = viewModelScope.launch {
+    fun getWeatherReport() = viewModelScope.launch {
         getWeatherReportDataUseCase("Jeddah", 7, "no", "no")
             .onEach {
                 when (it){
