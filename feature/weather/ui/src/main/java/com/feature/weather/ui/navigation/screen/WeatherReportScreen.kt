@@ -183,7 +183,7 @@ fun Landscape() {
 }
 
 @Composable
-fun InitViewWeather() {
+fun InitWeatherWeather() {
 
     val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 

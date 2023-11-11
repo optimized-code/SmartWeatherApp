@@ -3,7 +3,7 @@ package com.feature.weather.ui.navigation
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.core.feature_api.FeatureApi
-import com.feature.weather.ui.navigation.screen.InitViewWeather
+import com.feature.weather.ui.navigation.screen.InitWeatherWeather
 import com.optmizedcode.core.common.navigation_constant.WeatherFeature
 
 /*
@@ -28,7 +28,7 @@ internal object InternalWeatherFeatureApi: FeatureApi {
             composable(WeatherFeature.weatherScreenRoute){
 //                val viewModel = hiltViewModel<TodayWeatherReportViewModel>()
                 //WeatherReportScreen(viewModel = viewModel)
-                InitViewWeather()
+                InitWeatherWeather()
             }
         }
     }
