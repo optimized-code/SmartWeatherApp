@@ -185,22 +185,30 @@ fun Landscape() {
 @Composable
 fun InitViewWeather() {
 
-    val isGranted = ContextCompat.checkSelfPermission(
+    val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+
+    val isFinePermissionGranted = ContextCompat.checkSelfPermission(
         LocalContext.current,
-        Manifest.permission.CAMERA
+        Manifest.permission.ACCESS_FINE_LOCATION
     ) == PackageManager.PERMISSION_GRANTED
 
+    val isCoarsePermissionGranted = ContextCompat.checkSelfPermission(
+        LocalContext.current,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
 
     val isGrantedState = remember {
         mutableStateOf(
-            isGranted
+            isFinePermissionGranted && isCoarsePermissionGranted
         )
     }
 
     val locationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = {
-            isGrantedState.value = it
+            isGrantedState.value = it.values.reduce { acc, isPermissionGranted ->
+                acc && isPermissionGranted
+            }
         }
     )
 
@@ -212,13 +220,13 @@ fun InitViewWeather() {
             )
     )
     {
-        if (isGrantedState.value){
+        if (isGrantedState.value) {
             val viewModel = hiltViewModel<TodayWeatherReportViewModel>()
             WeatherReportScreen(viewModel = viewModel)
         } else {
-            LaunchedEffect(key1 = locationPermissionLauncher){
+            LaunchedEffect(key1 = locationPermissionLauncher) {
                 locationPermissionLauncher.launch(
-                    Manifest.permission.CAMERA
+                    permissions
                 )
             }
         }
