@@ -1,8 +1,5 @@
 package com.feature.weather.domain.use_cases
 
-import com.feature.weather.domain.model.Current
-import com.feature.weather.domain.model.Location
-import com.feature.weather.domain.model.WeatherReportDataModel
 import com.feature.weather.domain.repo.WeatherReportDataRepo
 import com.optmizedcode.core.common.UiEvent
 import kotlinx.coroutines.Dispatchers

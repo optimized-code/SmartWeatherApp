@@ -35,8 +35,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -197,7 +199,7 @@ fun InitWeatherWeather() {
         Manifest.permission.ACCESS_COARSE_LOCATION
     ) == PackageManager.PERMISSION_GRANTED
 
-    val isGrantedState = remember {
+    var isLocationPermissionGrantedState by remember {
         mutableStateOf(
             isFinePermissionGranted && isCoarsePermissionGranted
         )
@@ -206,7 +208,7 @@ fun InitWeatherWeather() {
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = {
-            isGrantedState.value = it.values.reduce { acc, isPermissionGranted ->
+            isLocationPermissionGrantedState = it.values.reduce { acc, isPermissionGranted ->
                 acc && isPermissionGranted
             }
         }
@@ -220,7 +222,7 @@ fun InitWeatherWeather() {
             )
     )
     {
-        if (isGrantedState.value) {
+        if (isLocationPermissionGrantedState) {
             val viewModel = hiltViewModel<TodayWeatherReportViewModel>()
             WeatherReportScreen(viewModel = viewModel)
         } else {
@@ -236,7 +238,7 @@ fun InitWeatherWeather() {
 
 @Composable
 fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
-    val result = viewModel.weatherReportData.value
+    val result = viewModel.weatherReportData
     Scaffold(
         bottomBar = { AppNavigationBar() },
         containerColor = Color.Transparent,

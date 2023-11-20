@@ -19,15 +19,16 @@ import com.optmizedcode.core.common.navigation_constant.WeatherFeature
  ***************************************************************
  */
 
-internal object InternalWeatherFeatureApi: FeatureApi {
+internal object InternalWeatherFeatureApi : FeatureApi {
     override fun registerGraph(
         navController: androidx.navigation.NavHostController,
         navGraphBuilder: androidx.navigation.NavGraphBuilder
     ) {
-        navGraphBuilder.navigation(startDestination = WeatherFeature.weatherScreenRoute, route = WeatherFeature.nestedRoute){
-            composable(WeatherFeature.weatherScreenRoute){
-//                val viewModel = hiltViewModel<TodayWeatherReportViewModel>()
-                //WeatherReportScreen(viewModel = viewModel)
+        navGraphBuilder.navigation(
+            startDestination = WeatherFeature.weatherScreenRoute,
+            route = WeatherFeature.nestedRoute
+        ) {
+            composable(WeatherFeature.weatherScreenRoute) {
                 InitWeatherWeather()
             }
         }

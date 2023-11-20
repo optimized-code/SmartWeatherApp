@@ -1,8 +1,9 @@
 package com.feature.weather.ui.navigation.screen
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.feature.weather.domain.use_cases.GetWeatherReportDataUseCase
@@ -40,26 +41,24 @@ class TodayWeatherReportViewModel @Inject constructor(
         getWeatherReport()
     }
 
-    private val _currentHour = mutableIntStateOf(getCalenderCurrentHour())
-    val currentHour: Int
-        get() = _currentHour.intValue
+    var currentHour by mutableIntStateOf(getCalenderCurrentHour())
+        private set
 
-    private val _weatherReportData = mutableStateOf(WeatherReportStateHolder())
-    val weatherReportData: State<WeatherReportStateHolder>
-        get() = _weatherReportData
+    var weatherReportData by mutableStateOf(WeatherReportStateHolder())
+        private set
 
-    fun getWeatherReport() = viewModelScope.launch {
+    private fun getWeatherReport() = viewModelScope.launch {
         getWeatherReportDataUseCase("Jeddah", 7, "no", "no")
             .onEach {
-                when (it){
+                weatherReportData = when (it){
                     is UiEvent.Loading -> {
-                        _weatherReportData.value = WeatherReportStateHolder(isLoading = true)
+                        WeatherReportStateHolder(isLoading = true)
                     }
                     is UiEvent.Error -> {
-                        _weatherReportData.value = WeatherReportStateHolder(error = it.message)
+                        WeatherReportStateHolder(error = it.message)
                     }
                     is UiEvent.Success -> {
-                        _weatherReportData.value = WeatherReportStateHolder(success = it.data)
+                        WeatherReportStateHolder(success = it.data)
                     }
                 }
             }
@@ -75,8 +74,8 @@ class TodayWeatherReportViewModel @Inject constructor(
         // get remaining minutes and run after that
         timer.schedule(TimeUnit.MINUTES.toMillis(1)) {
             val hour = getCalenderCurrentHour()
-            if (_currentHour.intValue != hour){
-                _currentHour.intValue = hour
+            if (currentHour != hour){
+                currentHour = hour
             }
         }
     }
