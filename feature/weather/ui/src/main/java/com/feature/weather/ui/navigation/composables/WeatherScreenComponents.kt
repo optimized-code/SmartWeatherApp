@@ -424,7 +424,7 @@ fun WindInfoItem(windKm: Int, gustKm: Int) {
                     .padding(horizontal = 5.dp)
             )
             Text(
-                text = stringResource(id = com.feature.weather.ui.R.string.wind_1),
+                text = stringResource(id = com.feature.weather.ui.R.string.wind),
                 style = MaterialTheme.typography.titleSmall,
                 color = Color.DarkGray
             )
@@ -460,7 +460,7 @@ fun WindInfoItem(windKm: Int, gustKm: Int) {
                         textAlign = TextAlign.Center
                     )
                     Text(
-                        text = stringResource(id = com.feature.weather.ui.R.string.wind),
+                        text = stringResource(id = com.feature.weather.ui.R.string.wind_1),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.DarkGray
                     )

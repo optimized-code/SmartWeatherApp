@@ -16,5 +16,6 @@ package com.optmizedcode.smartweatherforcast.helpers
 class AppConstants {
     companion object {
         const val currentLocale =  "ar"
+        const val forecastDays =  7
     }
 }

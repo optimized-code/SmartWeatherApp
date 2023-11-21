@@ -29,6 +29,8 @@ material = "1.10.0"
 v-nav-version = "2.7.4"
 v-hilt-navigation-compose = "1.1.0"
 v-constraintlayout = "2.2.0-alpha13"
+v-play-services-location = "21.0.1"
+v-play-services-maps = "18.2.0"
 
 
 [libraries]
@@ -63,7 +65,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "v-nav-version" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "v-hilt-navigation-compose" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "v-constraintlayout" }
-
+play-services-location = {module = "com.google.android.gms:play-services-location", version.ref = "v-play-services-location"}
+play-services-maps = {module = "com.google.android.gms:play-services-maps", version.ref = "v-play-services-maps"}
 
 [bundles]
 libs-bundles-compose-bundle = ["compose-activity",

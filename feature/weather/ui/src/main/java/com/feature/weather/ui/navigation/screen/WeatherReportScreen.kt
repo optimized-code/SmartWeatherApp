@@ -60,6 +60,7 @@ import com.feature.weather.ui.navigation.helpers.getFeelsLikeMessage
 import com.feature.weather.ui.navigation.helpers.getPrecipitationMessage
 import com.feature.weather.ui.navigation.helpers.getUVIndexIntensity
 import com.feature.weather.ui.navigation.helpers.getUVIndexMessage
+import com.optimizedcode.location.hasLocationPermission
 
 /*
 **************************************************************
@@ -188,20 +189,11 @@ fun Landscape() {
 fun InitWeatherWeather() {
 
     val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-
-    val isFinePermissionGranted = ContextCompat.checkSelfPermission(
-        LocalContext.current,
-        Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
-
-    val isCoarsePermissionGranted = ContextCompat.checkSelfPermission(
-        LocalContext.current,
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
+    val isLocationPermissionsGranted = LocalContext.current.hasLocationPermission()
 
     var isLocationPermissionGrantedState by remember {
         mutableStateOf(
-            isFinePermissionGranted && isCoarsePermissionGranted
+            isLocationPermissionsGranted
         )
     }
 

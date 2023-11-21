@@ -45,6 +45,7 @@ dependencies {
 
     implementation(project(":core:feature_api"))
     implementation(project(":core:common"))
+    implementation(project(":core:location"))
     implementation(project(":feature:weather:domain"))
     implementation(project(":feature:weather:data"))
     implementation(project(":assets"))

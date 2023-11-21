@@ -7,10 +7,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.feature.weather.domain.use_cases.GetWeatherReportDataUseCase
+import com.optimizedcode.location.use_cases.LocationServiceUseCase
 import com.optmizedcode.core.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.takeWhile
+import kotlinx.coroutines.flow.transformWhile
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Timer
@@ -33,7 +39,8 @@ import kotlin.concurrent.schedule
 
 @HiltViewModel
 class TodayWeatherReportViewModel @Inject constructor(
-    private val getWeatherReportDataUseCase: GetWeatherReportDataUseCase
+    private val getWeatherReportDataUseCase: GetWeatherReportDataUseCase,
+    private val locationServiceUseCase: LocationServiceUseCase
 ) : ViewModel() {
     private val timer: Timer = Timer("CheckCurrentHour", true)
 
@@ -48,21 +55,27 @@ class TodayWeatherReportViewModel @Inject constructor(
         private set
 
     private fun getWeatherReport() = viewModelScope.launch {
-        getWeatherReportDataUseCase("Jeddah", 7, "no", "no")
-            .onEach {
-                weatherReportData = when (it){
-                    is UiEvent.Loading -> {
-                        WeatherReportStateHolder(isLoading = true)
-                    }
-                    is UiEvent.Error -> {
-                        WeatherReportStateHolder(error = it.message)
-                    }
-                    is UiEvent.Success -> {
-                        WeatherReportStateHolder(success = it.data)
+        locationServiceUseCase.invoke().transformWhile {
+            emit(it)
+            it.isEmpty()
+        }.collect { coordinates ->
+            val currentLocation = "${coordinates[0]},${coordinates[1]}"
+            getWeatherReportDataUseCase(currentLocation, 7, "no", "no")
+                .onEach {
+                    weatherReportData = when (it){
+                        is UiEvent.Loading -> {
+                            WeatherReportStateHolder(isLoading = true)
+                        }
+                        is UiEvent.Error -> {
+                            WeatherReportStateHolder(error = it.message)
+                        }
+                        is UiEvent.Success -> {
+                            WeatherReportStateHolder(success = it.data)
+                        }
                     }
                 }
-            }
-            .launchIn(viewModelScope)
+                .launchIn(viewModelScope)
+        }
     }
 
     private fun getCalenderCurrentHour(): Int {
