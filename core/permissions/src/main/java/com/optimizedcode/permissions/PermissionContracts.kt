@@ -10,7 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
  * @author ehtisham
  * @package com.optimizedcode.permissions
  * @date 10-Nov-2023
- * @copyright 2023 Optimized code (https://www.optimizedcode.com)
+ * @copyright 2023 Optimized code (https://www.optimizedcode.io)
  * @license Open source
  ***************************************************************
  */

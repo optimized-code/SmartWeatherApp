@@ -1,5 +1,7 @@
 package com.optimizedcode.permissions
 
+import androidx.activity.result.contract.ActivityResultContracts
+
 /*
 **************************************************************
  * www.optimizedcode.io 
@@ -8,7 +10,7 @@ package com.optimizedcode.permissions
  * @author ehtisham
  * @package com.optimizedcode.permissions
  * @date 10-Nov-2023
- * @copyright 2023 Optimized code (https://www.optimizedcode.com)
+ * @copyright 2023 Optimized code (https://www.optimizedcode.io)
  * @license Open source
  ***************************************************************
  */
@@ -21,6 +23,5 @@ sealed class PermissionsEvent<T>(
     class onGrantedPermission<T> : PermissionsEvent<T>()
     class onPermanentlyDenied<T>(permanentlyDenied: Boolean) :
         PermissionsEvent<T>(permanentlyDenied = permanentlyDenied)
-
-    class onIsGranted<T>(isGranted: Boolean) : PermissionsEvent<T>(isGranted = isGranted)
+    class onGranted<T>(isGranted: Boolean) : PermissionsEvent<T>(isGranted = isGranted)
 }
