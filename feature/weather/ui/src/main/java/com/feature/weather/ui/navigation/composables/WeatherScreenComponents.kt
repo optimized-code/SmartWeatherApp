@@ -3,6 +3,7 @@ package com.feature.weather.ui.navigation.composables
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -148,7 +149,11 @@ fun WeatherSummaryCircle(location: Location = Location(), current: Current = Cur
 }
 
 @Composable
-fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf(), currentHour: Int = 0) {
+fun HourlyForecast(
+    hours: ArrayList<Hour>? = arrayListOf(),
+    currentHour: Int = 0,
+    onNextDaysForecastClick: () -> Unit = {}
+) {
     hours?.add(Hour())
     hours?.add(Hour())
 
@@ -176,9 +181,11 @@ fun HourlyForecast(hours: ArrayList<Hour>? = arrayListOf(), currentHour: Int = 0
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier
                     .fillMaxHeight()
-                    .wrapContentHeight(),
+                    .wrapContentHeight()
+                    .clickable {
+                        onNextDaysForecastClick()
+                    },
                 textAlign = TextAlign.Center,
-
             )
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,

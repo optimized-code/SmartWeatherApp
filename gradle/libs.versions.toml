@@ -31,6 +31,8 @@ v-hilt-navigation-compose = "1.1.0"
 v-constraintlayout = "2.2.0-alpha13"
 v-play-services-location = "21.0.1"
 v-play-services-maps = "18.2.0"
+v-room-db = "2.6.0"
+
 
 
 [libraries]
@@ -67,6 +69,13 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "v-constraintlayout" }
 play-services-location = {module = "com.google.android.gms:play-services-location", version.ref = "v-play-services-location"}
 play-services-maps = {module = "com.google.android.gms:play-services-maps", version.ref = "v-play-services-maps"}
+
+
+room-runtime = {module = "androidx.room:room-runtime", version.ref = "v-room-db"}
+room-compiler = {module = "androidx.room:room-compiler", version.ref = "v-room-db"}
+kapt-room-compiler = {module = "androidx.room:room-compiler", version.ref = "v-room-db"}
+ksp-room-compiler = {module = "androidx.room:room-compiler", version.ref = "v-room-db"}
+
 
 [bundles]
 libs-bundles-compose-bundle = ["compose-activity",

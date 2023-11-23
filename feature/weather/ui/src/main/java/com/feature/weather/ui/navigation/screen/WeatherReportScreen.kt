@@ -1,7 +1,6 @@
 package com.feature.weather.ui.navigation.screen
 
 import android.Manifest
-import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -46,7 +45,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.feature.weather.ui.R
 import com.feature.weather.ui.navigation.composables.AdditionalInfoRow
@@ -186,7 +184,9 @@ fun Landscape() {
 }
 
 @Composable
-fun InitWeatherWeather() {
+fun InitWeatherReportScreen(
+    onNextDaysForecastClick: () -> Unit
+) {
 
     val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     val isLocationPermissionsGranted = LocalContext.current.hasLocationPermission()
@@ -216,7 +216,7 @@ fun InitWeatherWeather() {
     {
         if (isLocationPermissionGrantedState) {
             val viewModel = hiltViewModel<TodayWeatherReportViewModel>()
-            WeatherReportScreen(viewModel = viewModel)
+            WeatherReportScreen(viewModel = viewModel, onNextDaysForecastClick)
         } else {
             LaunchedEffect(key1 = locationPermissionLauncher) {
                 locationPermissionLauncher.launch(
@@ -229,7 +229,10 @@ fun InitWeatherWeather() {
 
 
 @Composable
-fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
+fun WeatherReportScreen(
+    viewModel: TodayWeatherReportViewModel,
+    onNextDaysForecastClick: () -> Unit
+) {
     val result = viewModel.weatherReportData
     Scaffold(
         bottomBar = { AppNavigationBar() },
@@ -262,7 +265,7 @@ fun WeatherReportScreen(viewModel: TodayWeatherReportViewModel) {
                 WeatherSummaryCircle(it.location, it.current)
                 AdditionalInfoRow(it.current.humidity, it.current.windKph, it.current.visKm)
                 viewModel.checkHourChange()
-                HourlyForecast(it.forecast[0].hour, viewModel.currentHour)
+                HourlyForecast(it.forecast[0].hour, viewModel.currentHour, onNextDaysForecastClick)
 
                 val uvIndex = it.current.uv ?: 0
                 val feelsLike = it.current.feelslikeC?.toInt() ?: 0

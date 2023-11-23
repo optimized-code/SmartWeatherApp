@@ -19,4 +19,5 @@ object WeatherFeature {
 
     // Screens
     const val weatherScreenRoute = "weather_screen_route"
+    const val nextDaysForecastScreenRoute = "next_days_forecast_screen_route"
 }

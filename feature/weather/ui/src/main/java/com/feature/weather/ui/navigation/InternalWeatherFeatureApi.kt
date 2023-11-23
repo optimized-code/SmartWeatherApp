@@ -3,7 +3,8 @@ package com.feature.weather.ui.navigation
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.core.feature_api.FeatureApi
-import com.feature.weather.ui.navigation.screen.InitWeatherWeather
+import com.feature.weather.ui.navigation.screen.InitWeatherReportScreen
+import com.feature.weather.ui.navigation.screen.NextDaysForecastScreen
 import com.optmizedcode.core.common.navigation_constant.WeatherFeature
 
 /*
@@ -28,9 +29,16 @@ internal object InternalWeatherFeatureApi : FeatureApi {
             startDestination = WeatherFeature.weatherScreenRoute,
             route = WeatherFeature.nestedRoute
         ) {
-            composable(WeatherFeature.weatherScreenRoute) {
-                InitWeatherWeather()
+            composable(
+                WeatherFeature.weatherScreenRoute
+            ) {
+                InitWeatherReportScreen(
+                    onNextDaysForecastClick = {
+                        navController.navigate(WeatherFeature.nextDaysForecastScreenRoute)
+                    }
+                )
             }
+            composable(WeatherFeature.nextDaysForecastScreenRoute) { NextDaysForecastScreen() }
         }
     }
 
