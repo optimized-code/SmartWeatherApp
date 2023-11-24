@@ -4,10 +4,8 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="testRunner" value="GRADLE" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="19" />
+        <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -15,6 +13,7 @@
             <option value="$PROJECT_DIR$/assets" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
+            <option value="$PROJECT_DIR$/core/database" />
             <option value="$PROJECT_DIR$/core/feature_api" />
             <option value="$PROJECT_DIR$/core/location" />
             <option value="$PROJECT_DIR$/core/network" />
@@ -27,6 +26,7 @@
             <option value="$PROJECT_DIR$/feature/weather/ui" />
           </set>
         </option>
+        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

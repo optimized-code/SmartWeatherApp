@@ -6,7 +6,7 @@
     <string name="settings">Settings</string>
     <string name="next_7_days">Next 7 Days</string>
     <string name="uv_index">UV INDEX</string>
-    <string name="feels_like">FEELS LIKE</string>
+    <string name="feels_like">Feels like</string>
     <string name="pressure">PRESSURE</string>
     <string name="sun_rise">SUNRISE</string>
     <string name="precipitation">PRECIPITATION</string>
@@ -34,4 +34,7 @@
     <string name="gust">Gust</string>
     <string name="km_h">KM/H</string>
     <string name="today">Today</string>
+    <string name="chances_of_rain">Chances of rain %1$s\%%</string>
+    <string name="uv_index_s">UV index %1$s</string>
+    <string name="forecasted_days">Forecasted days</string>
 </resources>

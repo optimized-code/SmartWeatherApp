@@ -15,5 +15,9 @@
     <color name="wa_blackWhite">#FF000000</color>
     <color name="wa_whiteBlack">#FFFFFFFF</color>
     <color name="wa_lightBlue">#AECDFF</color>
+    <color name="wa_lightBlueVariant">#5896FD</color>
+    <color name="wa_lightGrey">#80F0F6F8</color>
+    <color name="wa_gray">#848B8E</color>
+
 
 </resources>

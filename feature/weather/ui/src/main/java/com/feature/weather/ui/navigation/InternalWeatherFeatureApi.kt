@@ -1,10 +1,12 @@
 package com.feature.weather.ui.navigation
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.core.feature_api.FeatureApi
-import com.feature.weather.ui.navigation.screen.InitWeatherReportScreen
-import com.feature.weather.ui.navigation.screen.NextDaysForecastScreen
+import com.feature.weather.ui.navigation.screen.forecastScreen.ForecastScreenViewModel
+import com.feature.weather.ui.navigation.screen.homeScreen.InitWeatherReportScreen
+import com.feature.weather.ui.navigation.screen.forecastScreen.NextDaysForecastScreen
 import com.optmizedcode.core.common.navigation_constant.WeatherFeature
 
 /*
@@ -26,19 +28,21 @@ internal object InternalWeatherFeatureApi : FeatureApi {
         navGraphBuilder: androidx.navigation.NavGraphBuilder
     ) {
         navGraphBuilder.navigation(
-            startDestination = WeatherFeature.weatherScreenRoute,
-            route = WeatherFeature.nestedRoute
+            startDestination = WeatherFeature.weatherReportScreen,
+            route = WeatherFeature.weatherReportRoute
         ) {
-            composable(
-                WeatherFeature.weatherScreenRoute
-            ) {
+            composable(WeatherFeature.weatherReportScreen) {
                 InitWeatherReportScreen(
                     onNextDaysForecastClick = {
-                        navController.navigate(WeatherFeature.nextDaysForecastScreenRoute)
+                        navController.navigate(WeatherFeature.nextDaysForecastScreen)
                     }
                 )
             }
-            composable(WeatherFeature.nextDaysForecastScreenRoute) { NextDaysForecastScreen() }
+
+            composable(WeatherFeature.nextDaysForecastScreen) {
+                val viewModel = hiltViewModel<ForecastScreenViewModel>()
+                NextDaysForecastScreen(viewModel)
+            }
         }
     }
 

@@ -61,11 +61,7 @@ data class Condition(
     var text: String? = null,
     var icon: String? = null,
     var code: Int? = null
-){
-    fun getIconName(): String{
-        return "$code"
-    }
-}
+)
 
 data class AirQuality(
     var co: Double? = null,
@@ -76,10 +72,6 @@ data class AirQuality(
     var pm10: Double? = null,
     var usEpaIndex: Int? = null,
     var gbDefraIndex: Int? = null
-)
-
-data class Forecast(
-    var forecastday: ArrayList<Forecastday>
 )
 
 data class Forecastday(

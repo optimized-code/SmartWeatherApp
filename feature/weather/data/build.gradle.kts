@@ -39,6 +39,7 @@ dependencies {
 
     implementation(project(":feature:weather:domain"))
     implementation(project(":core:network"))
+    implementation(project(":core:database"))
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

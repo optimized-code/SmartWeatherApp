@@ -20,7 +20,10 @@ import com.optmizedcode.core.common.navigation_constant.WeatherFeature
 
 @Composable
 fun AppNavGraph(navController: NavHostController, navigationProvider: NavigationProvider) {
-    NavHost(navController = navController, startDestination = WeatherFeature.nestedRoute) {
+    NavHost(
+        navController = navController,
+        startDestination = WeatherFeature.weatherReportRoute
+    ) {
         navigationProvider.weatherApi.registerGraph(navController, this)
     }
 }

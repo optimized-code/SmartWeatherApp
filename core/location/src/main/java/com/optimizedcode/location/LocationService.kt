@@ -48,9 +48,6 @@ fun getLocationClient(): LocationRequest {
 
 @SuppressLint("MissingPermission")
 private fun getLastKnownLocation(context: Context): Location? {
-
-    return null
-
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     val providers = locationManager.getProviders(true)
     var result: Location? = null

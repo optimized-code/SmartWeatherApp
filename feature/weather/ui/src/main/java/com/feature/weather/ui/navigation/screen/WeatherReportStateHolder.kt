@@ -1,5 +1,6 @@
 package com.feature.weather.ui.navigation.screen
 
+import com.feature.weather.domain.model.Forecastday
 import com.feature.weather.domain.model.WeatherReportDataModel
 
 /*
@@ -19,4 +20,10 @@ data class WeatherReportStateHolder(
     var isLoading: Boolean = false,
     var error: String = "",
     var success: WeatherReportDataModel? = null
+)
+
+data class ForecastStateHolder(
+    var isLoading: Boolean = false,
+    var error: String = "",
+    var success: ArrayList<Forecastday>? = null
 )

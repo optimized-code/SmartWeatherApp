@@ -1,4 +1,4 @@
-package com.feature.weather.ui.navigation.screen
+package com.feature.weather.ui.navigation.screen.homeScreen
 
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -46,9 +47,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.feature.weather.domain.model.Hour
 import com.feature.weather.ui.R
 import com.feature.weather.ui.navigation.composables.AdditionalInfoRow
-import com.feature.weather.ui.navigation.composables.HourlyForecast
+import com.feature.weather.ui.navigation.composables.ForecastListRow
+import com.feature.weather.ui.navigation.composables.HourlyForecastTitle
 import com.feature.weather.ui.navigation.composables.LinearLabelsSingleAttributeItem
 import com.feature.weather.ui.navigation.composables.WeatherSummaryCircle
 import com.feature.weather.ui.navigation.composables.WindInfoItem
@@ -58,6 +61,7 @@ import com.feature.weather.ui.navigation.helpers.getFeelsLikeMessage
 import com.feature.weather.ui.navigation.helpers.getPrecipitationMessage
 import com.feature.weather.ui.navigation.helpers.getUVIndexIntensity
 import com.feature.weather.ui.navigation.helpers.getUVIndexMessage
+import com.feature.weather.ui.navigation.screen.Portrait5Inch
 import com.optimizedcode.location.hasLocationPermission
 
 /*
@@ -89,7 +93,7 @@ fun WeatherReportScreen_onlyForPreview() {
 @Composable
 fun Portrait() {
     Scaffold(
-        bottomBar = { AppNavigationBar() },
+        //bottomBar = { AppNavigationBar() },
         containerColor = Color.Transparent,
         modifier = Modifier
             .fillMaxSize()
@@ -107,8 +111,12 @@ fun Portrait() {
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             WeatherSummaryCircle()
-            AdditionalInfoRow()
-            HourlyForecast()
+            AdditionalInfoRow(modifier = Modifier.fillMaxWidth())
+
+            Column(modifier = Modifier.padding(top = 5.dp)) {
+                HourlyForecastTitle()
+                ForecastListRow(hours = arrayListOf(Hour(), Hour()))
+            }
 
             Row(
                 modifier = Modifier.padding(horizontal = 10.dp),
@@ -178,7 +186,7 @@ fun Landscape() {
         ) {
             WeatherSummaryCircle()
             AdditionalInfoRow()
-            HourlyForecast()
+            ForecastListRow(hours = arrayListOf(Hour(), Hour()))
         }
     }
 }
@@ -188,7 +196,10 @@ fun InitWeatherReportScreen(
     onNextDaysForecastClick: () -> Unit
 ) {
 
-    val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+    val permissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
     val isLocationPermissionsGranted = LocalContext.current.hasLocationPermission()
 
     var isLocationPermissionGrantedState by remember {
@@ -227,98 +238,106 @@ fun InitWeatherReportScreen(
     }
 }
 
-
 @Composable
 fun WeatherReportScreen(
     viewModel: TodayWeatherReportViewModel,
     onNextDaysForecastClick: () -> Unit
 ) {
     val result = viewModel.weatherReportData
-    Scaffold(
-        bottomBar = { AppNavigationBar() },
-        containerColor = Color.Transparent,
+//    Scaffold(
+//        //bottomBar = { AppNavigationBar() },
+//        containerColor = Color.Transparent,
+//        modifier = Modifier
+//            .fillMaxSize()
+//            //.navigationBarsPadding()
+//            //.statusBarsPadding()
+//            .background(gradientBg())
+//    ) { innerPadding ->
+    // Main column with all placeholders
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .navigationBarsPadding()
-            .statusBarsPadding()
-            .background(gradientBg())
-    ) { innerPadding ->
-        // Main column with all placeholders
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(25.dp)
-        ) {
+            //.statusBarsPadding()
+            //.padding(innerPadding)
+            .verticalScroll(rememberScrollState()).padding(bottom = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(25.dp)
+    ) {
 
-            if (result.isLoading) {
-                CircularProgressIndicator()
+        if (result.isLoading) {
+            CircularProgressIndicator()
+        }
+
+        if (result.error.isNotEmpty()) {
+            Text(result.error)
+        }
+
+        result.success?.let {
+            WeatherSummaryCircle(it.location, it.current)
+            AdditionalInfoRow(
+                humidity = it.current.humidity,
+                windSpeed = it.current.windKph, visibility = it.current.visKm
+            )
+            viewModel.checkHourChange()
+            HourlyForecastTitle(onLinkClick = onNextDaysForecastClick)
+            ForecastListRow(
+                hours = it.forecast[0].hour,
+                isSelectionEnabled = true,
+                currentSelection = viewModel.currentHour
+            )
+
+            val uvIndex = it.current.uv ?: 0
+            val feelsLike = it.current.feelslikeC?.toInt() ?: 0
+            val actualTemp = it.current.tempC ?: 0
+            val precipitation = it.current.precipIn ?: 0
+
+            Row(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                LinearLabelsSingleAttributeItem(
+                    icon = com.optmizedcode.assets.R.drawable.ic_wb_sunny,
+                    heading = stringResource(R.string.uv_index),
+                    value = uvIndex.toString(),
+                    valueDescription = getUVIndexIntensity(uvIndex).getString(),
+                    shortDescription = getUVIndexMessage(uvIndex).getString()
+                )
+                LinearLabelsSingleAttributeItem(
+                    icon = com.optmizedcode.assets.R.drawable.ic_water_drop,
+                    heading = stringResource(R.string.feels_like),
+                    value = "${feelsLike}°",
+                    valueDescription = "",
+                    shortDescription = getFeelsLikeMessage(
+                        actualTemp,
+                        feelsLike
+                    ).getString()
+                )
             }
 
-            if (result.error.isNotEmpty()) {
-                Text(result.error)
+            Row(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                LinearLabelsSingleAttributeItem(
+                    icon = com.optmizedcode.assets.R.drawable.ic_water_drop,
+                    heading = stringResource(R.string.pressure),
+                    value = "$precipitation mm",
+                    valueDescription = stringResource(R.string.in_last_24hr),
+                    shortDescription = getPrecipitationMessage(it.forecast).getString()
+                )
+                LinearLabelsSingleAttributeItem(
+                    icon = com.optmizedcode.assets.R.drawable.ic_vector_sunrise_1,
+                    heading = stringResource(R.string.sun_rise),
+                    value = it.forecast[0].astro?.sunrise?.replace(" ", "") ?: "",
+                    valueDescription = stringResource(R.string.sunset),
+                    shortDescription = it.forecast[0].astro?.sunset ?: ""
+                )
             }
 
-            result.success?.let {
-                WeatherSummaryCircle(it.location, it.current)
-                AdditionalInfoRow(it.current.humidity, it.current.windKph, it.current.visKm)
-                viewModel.checkHourChange()
-                HourlyForecast(it.forecast[0].hour, viewModel.currentHour, onNextDaysForecastClick)
-
-                val uvIndex = it.current.uv ?: 0
-                val feelsLike = it.current.feelslikeC?.toInt() ?: 0
-                val actualTemp = it.current.tempC ?: 0
-                val precipitation = it.current.precipIn ?: 0
-
-                Row(
-                    modifier = Modifier.padding(horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    LinearLabelsSingleAttributeItem(
-                        icon = com.optmizedcode.assets.R.drawable.ic_wb_sunny,
-                        heading = stringResource(R.string.uv_index),
-                        value = uvIndex.toString(),
-                        valueDescription = getUVIndexIntensity(uvIndex).getString(),
-                        shortDescription = getUVIndexMessage(uvIndex).getString()
-                    )
-                    LinearLabelsSingleAttributeItem(
-                        icon = com.optmizedcode.assets.R.drawable.ic_water_drop,
-                        heading = stringResource(R.string.feels_like),
-                        value = "${feelsLike}°",
-                        valueDescription = "",
-                        shortDescription = getFeelsLikeMessage(
-                            actualTemp,
-                            feelsLike
-                        ).getString()
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.padding(horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    LinearLabelsSingleAttributeItem(
-                        icon = com.optmizedcode.assets.R.drawable.ic_water_drop,
-                        heading = stringResource(R.string.pressure),
-                        value = "$precipitation mm",
-                        valueDescription = stringResource(R.string.in_last_24hr),
-                        shortDescription = getPrecipitationMessage(it.forecast).getString()
-                    )
-                    LinearLabelsSingleAttributeItem(
-                        icon = com.optmizedcode.assets.R.drawable.ic_vector_sunrise_1,
-                        heading = stringResource(R.string.sun_rise),
-                        value = it.forecast[0].astro?.sunrise?.replace(" ", "") ?: "",
-                        valueDescription = stringResource(R.string.sunset),
-                        shortDescription = it.forecast[0].astro?.sunset ?: ""
-                    )
-                }
-
-                WindInfoItem(it.current.windKph?.toInt() ?: 0, it.current.gustKph?.toInt() ?: 0)
-            }
+            WindInfoItem(it.current.windKph?.toInt() ?: 0, it.current.gustKph?.toInt() ?: 0)
         }
     }
+//    }
 }
 
 @Composable

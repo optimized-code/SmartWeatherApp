@@ -225,6 +225,7 @@ val JosefinTypography = Typography(
         fontFamily = josefinFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
+        lineHeight = 16.sp,
         platformStyle = PlatformTextStyle(
             includeFontPadding = false
         )

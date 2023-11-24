@@ -21,8 +21,9 @@ import javax.inject.Inject
  ***************************************************************
  */
 
-class GetWeatherReportDataUseCase @Inject constructor(private val weatherReportDataRepo: WeatherReportDataRepo) {
-
+class GetWeatherReportDataUseCase @Inject constructor(
+    private val weatherReportDataRepo: WeatherReportDataRepo
+) {
     operator fun invoke(
         city: String,
         days: Int,
@@ -30,7 +31,6 @@ class GetWeatherReportDataUseCase @Inject constructor(private val weatherReportD
         alerts: String
     ) = flow {
         emit(UiEvent.Loading())
-//        val data = WeatherReportDataModel(Location(), Current(), arrayListOf())
         val data = weatherReportDataRepo.getWeatherReportData(city, days, aqi, alerts)
         emit(UiEvent.Success(data))
     }.catch {

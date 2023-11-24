@@ -15,9 +15,18 @@ package com.optmizedcode.core.common.navigation_constant
  
 object WeatherFeature {
     // Main route name
-    const val nestedRoute = "weather_nested_route"
+    const val weatherReportRoute = "weather_route"
 
     // Screens
-    const val weatherScreenRoute = "weather_screen_route"
-    const val nextDaysForecastScreenRoute = "next_days_forecast_screen_route"
+    const val weatherReportScreen = "weather_report_screen"
+    const val nextDaysForecastScreen = "next_days_forecast_screen"
+
+    const val searchRoute = "search_route"
+    const val favoriteRoute = "favorite_route"
+    const val settingsRoute = "settings_route"
+    const val searchCityScreen = "search_city_screen"
+    const val favoritesScreen = "favorites_screen"
+    const val settingsScreen = "settings_screen"
+
+
 }

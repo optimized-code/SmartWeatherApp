@@ -1,4 +1,4 @@
-package com.feature.weather.ui.navigation.screen
+package com.feature.weather.ui.navigation.screen.homeScreen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -7,16 +7,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.feature.weather.domain.use_cases.GetWeatherReportDataUseCase
+import com.feature.weather.ui.navigation.screen.WeatherReportStateHolder
 import com.optimizedcode.location.use_cases.LocationServiceUseCase
 import com.optmizedcode.core.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.transformWhile
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Timer
@@ -55,7 +52,7 @@ class TodayWeatherReportViewModel @Inject constructor(
         private set
 
     private fun getWeatherReport() = viewModelScope.launch {
-        locationServiceUseCase.invoke().transformWhile {
+        locationServiceUseCase().transformWhile {
             emit(it)
             it.isEmpty()
         }.collect { coordinates ->

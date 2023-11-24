@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("kapt")
     alias(libs.plugins.android.application)
@@ -58,7 +60,13 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        languageVersion = "1.9"
     }
+
+    kotlin.sourceSets.all {
+        languageSettings.enableLanguageFeature("DataObjects")
+    }
+
 
     buildFeatures {
         compose = true
@@ -84,12 +92,15 @@ dependencies {
     // ALL OTHER LIBRARIES
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.hilt.navigation.compose)
+
     implementation(libs.compose.activity)
     implementation(platform(libs.compose.platform))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material)
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
@@ -98,7 +109,6 @@ dependencies {
     // ALL DEBUG IMPLEMENTATIONS LIBRARIES
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
-
 
     // ALL TEST RELATED LIBRARIES
     testImplementation(libs.junit)
