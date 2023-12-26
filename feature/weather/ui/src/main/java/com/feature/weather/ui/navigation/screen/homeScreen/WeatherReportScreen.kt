@@ -55,10 +55,14 @@ import com.feature.weather.ui.R
 import com.feature.weather.ui.navigation.composables.AdditionalInfoRow
 import com.feature.weather.ui.navigation.composables.ForecastListRow
 import com.feature.weather.ui.navigation.composables.HourlyForecastTitle
+import com.feature.weather.ui.navigation.composables.IconAnimationType
 import com.feature.weather.ui.navigation.composables.LinearLabelsSingleAttributeItem
 import com.feature.weather.ui.navigation.composables.WeatherSummaryCircle
 import com.feature.weather.ui.navigation.composables.WindInfoItem
+import com.feature.weather.ui.navigation.composables.breathingAnimation
 import com.feature.weather.ui.navigation.composables.gradientBg
+import com.feature.weather.ui.navigation.composables.rotationAnimation
+import com.feature.weather.ui.navigation.composables.tiltAnimation
 import com.feature.weather.ui.navigation.faketheme.theme.SmartWeatherForecastAppTheme_Fake
 import com.feature.weather.ui.navigation.helpers.getFeelsLikeMessage
 import com.feature.weather.ui.navigation.helpers.getPrecipitationMessage
@@ -262,7 +266,8 @@ fun WeatherReportScreen(
             .fillMaxSize()
             //.statusBarsPadding()
             //.padding(innerPadding)
-            .verticalScroll(rememberScrollState()).padding(bottom = 20.dp),
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(25.dp)
     ) {
@@ -300,6 +305,8 @@ fun WeatherReportScreen(
             ) {
                 LinearLabelsSingleAttributeItem(
                     isAnimatable = true,
+                    animationType = IconAnimationType.ROTATION,
+                    iconAnimation = rotationAnimation(),
                     icon = com.optmizedcode.assets.R.drawable.ic_wb_sunny,
                     heading = stringResource(R.string.uv_index),
                     value = uvIndex.toString(),
@@ -307,6 +314,9 @@ fun WeatherReportScreen(
                     shortDescription = getUVIndexMessage(uvIndex).getString()
                 )
                 LinearLabelsSingleAttributeItem(
+                    isAnimatable = true,
+                    animationType = IconAnimationType.TRANSLATION_Y,
+                    iconAnimation = breathingAnimation(),
                     icon = com.optmizedcode.assets.R.drawable.ic_water_drop,
                     heading = stringResource(R.string.feels_like),
                     value = "${feelsLike}°",
@@ -323,6 +333,9 @@ fun WeatherReportScreen(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 LinearLabelsSingleAttributeItem(
+                    isAnimatable = true,
+                    animationType = IconAnimationType.TRANSLATION_Y,
+                    iconAnimation = breathingAnimation(),
                     icon = com.optmizedcode.assets.R.drawable.ic_water_drop,
                     heading = stringResource(R.string.pressure),
                     value = "$precipitation mm",
@@ -330,6 +343,9 @@ fun WeatherReportScreen(
                     shortDescription = getPrecipitationMessage(it.forecast).getString()
                 )
                 LinearLabelsSingleAttributeItem(
+                    isAnimatable = true,
+                    animationType = IconAnimationType.TILT,
+                    iconAnimation = tiltAnimation(),
                     icon = com.optmizedcode.assets.R.drawable.ic_vector_sunrise_1,
                     heading = stringResource(R.string.sun_rise),
                     value = it.forecast[0].astro?.sunrise?.replace(" ", "") ?: "",

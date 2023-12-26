@@ -2,23 +2,11 @@ package com.feature.weather.ui.navigation.composables
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.EaseInOut
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,7 +14,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -53,9 +40,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,12 +57,10 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.rotationMatrix
 import com.feature.weather.domain.model.Current
 import com.feature.weather.domain.model.Hour
 import com.feature.weather.domain.model.Location
@@ -564,113 +546,88 @@ fun AdditionalInfoItem(
     }
 }
 
-@Composable
-fun rotationAnimation(): Float {
-    val rotationState = rememberInfiniteTransition("")
-    val angle by rotationState.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 4000, easing = LinearEasing)
-        ), label = ""
-    )
-
-    return angle
-}
 
 @Composable
 fun LinearLabelsSingleAttributeItem(
     icon: Int = R.drawable.ic_1000,
     isAnimatable: Boolean = false,
-    iconAnimation: Float = if (isAnimatable) rotationAnimation() else { 0f },
+    animationType: IconAnimationType = IconAnimationType.ROTATION,
+    iconAnimation: Float = rotationAnimation(),
+    textAnimation: Float = scaleInOutAnimation(),
+    boxAnimation: Float = breathingAnimation(),
     heading: String = "Heading",
     value: String = "0",
     valueDescription: String = "Low",
     shortDescription: String = "Use sun protection 9AM - 4PM."
 ) {
-    val state = remember {
-        MutableTransitionState(false).apply {
-            // Start the animation immediately.
-            targetState = true
-        }
-    }
-    val density = LocalDensity.current
-    AnimatedVisibility(
-        visibleState = state,
-        enter = slideInVertically {
-            // Slide in from 40 dp from the top.
-            with(density) { -40.dp.roundToPx() }
-        } + expandVertically(
-            // Expand from the top.
-            expandFrom = Alignment.Top
-        ) + fadeIn(
-            // Fade in with the initial alpha of 0.3f.
-            initialAlpha = 0.1f
-        ),
-        exit = slideOutVertically() + shrinkVertically() + fadeOut()
+    ElevatedCard(
+        modifier = Modifier
+            .size(150.dp)
+            .background(Color.Transparent)
+            .graphicsLayer {
+                translationY = boxAnimation
+            },
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
-        ElevatedCard(
+        // heading
+        Row(
             modifier = Modifier
-                .size(150.dp)
-                .background(Color.Transparent),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+                .fillMaxWidth()
+                .padding(horizontal = 5.dp)
+                .height(35.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // heading
-            Row(
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null, tint = Color.DarkGray,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp)
-                    .height(35.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = icon),
-                    contentDescription = null, tint = Color.DarkGray,
-                    modifier = Modifier
-                        .size(25.dp)
-                        .padding(5.dp)
-                        .graphicsLayer {
-                            rotationZ = iconAnimation
-                        }
-                )
-                Text(
-                    text = heading,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.DarkGray,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.wrapContentHeight()
-                )
-            }
+                    .size(25.dp)
+                    .padding(5.dp)
+                    .graphicsLayer {
+                        animateLayer(isAnimatable, animationType, iconAnimation)
+                    }
+            )
+            Text(
+                text = heading,
+                style = MaterialTheme.typography.titleSmall,
+                color = Color.DarkGray,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.wrapContentHeight()
+            )
+        }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
-                    .background(Color.Transparent)
-            ) {
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 30.sp
-                    ),
-                    color = colorResource(id = com.feature.weather.ui.R.color.wa_secondary),
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = valueDescription,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.DarkGray,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = shortDescription,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.DarkGray
-                )
-            }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+                .background(Color.Transparent)
+        ) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 30.sp
+                ),
+                color = colorResource(id = com.feature.weather.ui.R.color.wa_secondary),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.graphicsLayer {
+                    scaleX = textAnimation
+                    scaleY = textAnimation
+                }
+            )
+            Text(
+                text = valueDescription,
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.DarkGray,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = shortDescription,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.DarkGray
+            )
         }
     }
 }
@@ -679,12 +636,17 @@ fun LinearLabelsSingleAttributeItem(
 fun WindInfoItem(
     windKm: Int,
     gustKm: Int,
-    iconAnimation: Float = rotationAnimation()
+    iconAnimation: Float = rotationAnimation(),
+    textAnimation: Float = scaleInOutAnimation(),
+    boxAnimation: Float = breathingAnimation(),
 ) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 25.dp),
+            .padding(horizontal = 25.dp)
+            .graphicsLayer {
+                translationY = boxAnimation
+            },
         //.height(140.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
@@ -737,7 +699,11 @@ fun WindInfoItem(
                             trim = LineHeightStyle.Trim.Both
                         )
                     ),
-                    color = colorResource(id = com.feature.weather.ui.R.color.wa_secondary)
+                    color = colorResource(id = com.feature.weather.ui.R.color.wa_secondary),
+                    modifier = Modifier.graphicsLayer {
+                        scaleX = textAnimation
+                        scaleY = textAnimation
+                    }
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Text(
@@ -776,7 +742,10 @@ fun WindInfoItem(
                         )
                     ),
                     color = colorResource(id = com.feature.weather.ui.R.color.wa_secondary),
-                    modifier = Modifier.wrapContentHeight()
+                    modifier = Modifier.wrapContentHeight().graphicsLayer {
+                        scaleX = textAnimation
+                        scaleY = textAnimation
+                    }
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Text(
