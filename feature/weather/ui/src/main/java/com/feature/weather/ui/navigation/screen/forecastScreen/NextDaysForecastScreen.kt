@@ -346,10 +346,9 @@ fun InnerCardLeftColumn(
 
         Text(
             text = title,
-            style = MaterialTheme.typography.displayLarge.copy(
-                fontSize = 18.sp
-            ),
-            color = MaterialTheme.colorScheme.onPrimary
+            style = MaterialTheme.typography.displayLarge.copy(fontSize = 18.sp),
+            color = MaterialTheme.colorScheme.onPrimary,
+            textAlign = TextAlign.Center
         )
 
         Text(

@@ -2,7 +2,16 @@ package com.feature.weather.ui.navigation.composables
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -44,6 +53,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,6 +78,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.rotationMatrix
 import com.feature.weather.domain.model.Current
 import com.feature.weather.domain.model.Hour
 import com.feature.weather.domain.model.Location
@@ -431,9 +444,29 @@ fun AdditionalInfoRow(
             ),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AdditionalInfoItem("${humidity}%", icon1, textColor, backgroundColor, isAnimatable = false, animateFromDown = true)
-            AdditionalInfoItem("${windSpeed?.toInt()}km/h", icon2, textColor, backgroundColor, isAnimatable = false)
-            AdditionalInfoItem("${visibility}km", icon3, textColor, backgroundColor, isAnimatable = false, animateFromDown = true)
+            AdditionalInfoItem(
+                "${humidity}%",
+                icon1,
+                textColor,
+                backgroundColor,
+                isAnimatable = false,
+                animateFromDown = true
+            )
+            AdditionalInfoItem(
+                "${windSpeed?.toInt()}km/h",
+                icon2,
+                textColor,
+                backgroundColor,
+                isAnimatable = false
+            )
+            AdditionalInfoItem(
+                "${visibility}km",
+                icon3,
+                textColor,
+                backgroundColor,
+                isAnimatable = false,
+                animateFromDown = true
+            )
         }
     }
 }
@@ -447,7 +480,7 @@ fun AdditionalInfoItem(
     animateFromDown: Boolean = false,
     isAnimatable: Boolean = false
 ) {
-    if (isAnimatable){
+    if (isAnimatable) {
         val state = remember {
             MutableTransitionState(false).apply {
                 targetState = true
@@ -456,7 +489,13 @@ fun AdditionalInfoItem(
         val density = LocalDensity.current
         AnimatedVisibility(
             visibleState = state,
-            enter = slideInVertically { with(density) { if (animateFromDown) 40.dp.roundToPx() else {-40.dp.roundToPx()} } }
+            enter = slideInVertically {
+                with(density) {
+                    if (animateFromDown) 40.dp.roundToPx() else {
+                        -40.dp.roundToPx()
+                    }
+                }
+            }
                     + expandVertically(expandFrom = Alignment.Top)
                     + fadeIn(initialAlpha = 0.1f),
         ) {
@@ -526,8 +565,24 @@ fun AdditionalInfoItem(
 }
 
 @Composable
+fun rotationAnimation(): Float {
+    val rotationState = rememberInfiniteTransition("")
+    val angle by rotationState.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 4000, easing = LinearEasing)
+        ), label = ""
+    )
+
+    return angle
+}
+
+@Composable
 fun LinearLabelsSingleAttributeItem(
     icon: Int = R.drawable.ic_1000,
+    isAnimatable: Boolean = false,
+    iconAnimation: Float = if (isAnimatable) rotationAnimation() else { 0f },
     heading: String = "Heading",
     value: String = "0",
     valueDescription: String = "Low",
@@ -577,6 +632,9 @@ fun LinearLabelsSingleAttributeItem(
                     modifier = Modifier
                         .size(25.dp)
                         .padding(5.dp)
+                        .graphicsLayer {
+                            rotationZ = iconAnimation
+                        }
                 )
                 Text(
                     text = heading,
@@ -618,7 +676,11 @@ fun LinearLabelsSingleAttributeItem(
 }
 
 @Composable
-fun WindInfoItem(windKm: Int, gustKm: Int) {
+fun WindInfoItem(
+    windKm: Int,
+    gustKm: Int,
+    iconAnimation: Float = rotationAnimation()
+) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -643,6 +705,9 @@ fun WindInfoItem(windKm: Int, gustKm: Int) {
                 modifier = Modifier
                     .width(25.dp)
                     .padding(horizontal = 5.dp)
+                    .graphicsLayer {
+                        rotationZ = iconAnimation
+                    }
             )
             Text(
                 text = stringResource(id = com.feature.weather.ui.R.string.wind),

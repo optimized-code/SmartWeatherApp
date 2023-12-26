@@ -36,6 +36,7 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,6 +44,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -296,6 +299,7 @@ fun WeatherReportScreen(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 LinearLabelsSingleAttributeItem(
+                    isAnimatable = true,
                     icon = com.optmizedcode.assets.R.drawable.ic_wb_sunny,
                     heading = stringResource(R.string.uv_index),
                     value = uvIndex.toString(),
