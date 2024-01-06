@@ -57,6 +57,7 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -93,17 +94,17 @@ fun WeatherSummaryCircle(location: Location = Location(), current: Current = Cur
         visibleState = state,
         enter = scaleIn() + fadeIn(initialAlpha = 0.1f),
     ) {
-        Box {
+        Box{
             ElevatedCard(
+                shape = CircleShape,
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 6.dp
+                ),
                 modifier = Modifier
                     .size(width = 260.dp, height = 260.dp)
                     .padding(top = 10.dp)
                     .align(Alignment.Center)
-                    .border(BorderStroke(5.dp, gradientBg()), shape = CircleShape),
-                shape = CircleShape,
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 6.dp
-                )
+                    .border(BorderStroke(5.dp, gradientBg()), shape = CircleShape)
             ) {
                 Column(
                     modifier = Modifier
@@ -319,6 +320,7 @@ fun ForecastListRow(
     }
 }
 
+@Preview
 @Composable
 fun ForecastListRowItem(
     text1: String = "",
@@ -348,7 +350,11 @@ fun ForecastListRowItem(
             modifier = Modifier
                 .background(bgColor)
                 .width(55.dp)
-                .height(100.dp),
+                .height(100.dp)
+                .shimmerLoadingAnimation(
+                    isEnabled = isSelected,
+                    color = colorResource(id = com.feature.weather.ui.R.color.wa_lightBlue)
+                ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -742,10 +748,12 @@ fun WindInfoItem(
                         )
                     ),
                     color = colorResource(id = com.feature.weather.ui.R.color.wa_secondary),
-                    modifier = Modifier.wrapContentHeight().graphicsLayer {
-                        scaleX = textAnimation
-                        scaleY = textAnimation
-                    }
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .graphicsLayer {
+                            scaleX = textAnimation
+                            scaleY = textAnimation
+                        }
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Text(
