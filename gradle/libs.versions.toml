@@ -32,6 +32,7 @@ v-constraintlayout = "2.2.0-alpha13"
 v-play-services-location = "21.0.1"
 v-play-services-maps = "18.2.0"
 v-room-db = "2.6.1"
+junit = "4.12"
 
 
 
@@ -75,6 +76,7 @@ room-runtime = {module = "androidx.room:room-runtime", version.ref = "v-room-db"
 room-compiler = {module = "androidx.room:room-compiler", version.ref = "v-room-db"}
 kapt-room-compiler = {module = "androidx.room:room-compiler", version.ref = "v-room-db"}
 ksp-room-compiler = {module = "androidx.room:room-compiler", version.ref = "v-room-db"}
+junit-junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 
 [bundles]

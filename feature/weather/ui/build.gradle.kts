@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.constraintlayout)
 
     implementation(libs.hilt.android)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)

@@ -31,6 +31,7 @@ fun Int.toStrDay(): String{
             "Noday"
     }
 }
+
 fun getDayFromDate(date: String): String {
     val calender: Calendar = Calendar.getInstance()
     val values = date.split("-")
@@ -39,6 +40,7 @@ fun getDayFromDate(date: String): String {
     calender.set(Calendar.DAY_OF_MONTH, values[2].toInt())
     return calender.get(Calendar.DAY_OF_WEEK).toStrDay()
 }
+
 fun getPrecipitationMessage(days: ArrayList<Forecastday>): UiText {
     for (day in days){
         day.day?.let {
@@ -53,6 +55,7 @@ fun getPrecipitationMessage(days: ArrayList<Forecastday>): UiText {
 
     return UiText.StringResourceValue(R.string.no_rain_expected)
 }
+
 fun getUVIndexMessage(uvIndex: Int): UiText {
     return if (uvIndex <= 2){
         UiText.StringResourceValue(R.string.no_need_to_use_sun_protection)
@@ -73,6 +76,7 @@ fun getUVIndexMessage(uvIndex: Int): UiText {
         UiText.StringResourceValue(R.string.use_sun_protection_to_be_safe)
     }
 }
+
 fun getFeelsLikeMessage(actualTemp: Int, feelsLikeTemp: Int): UiText {
     return if (actualTemp == feelsLikeTemp){
         UiText.StringResourceValue(R.string.similar_to_the_actual_temperature)
@@ -84,6 +88,7 @@ fun getFeelsLikeMessage(actualTemp: Int, feelsLikeTemp: Int): UiText {
         UiText.StringResourceValue(R.string.humidity_is_making_it_warmer)
     }
 }
+
 fun getUVIndexIntensity(uvIndex: Int): UiText {
     return if (uvIndex <= 2){
         UiText.StringResourceValue(R.string.low)
@@ -104,6 +109,7 @@ fun getUVIndexIntensity(uvIndex: Int): UiText {
         UiText.StringResourceValue(R.string.low)
     }
 }
+
 fun getWeatherIcon(code: Int?, isDay: Boolean): Int{
     return when (code) {
         1000 -> if (isDay) com.optmizedcode.assets.R.drawable.ic_1000 else com.optmizedcode.assets.R.drawable.ic_1000_nn

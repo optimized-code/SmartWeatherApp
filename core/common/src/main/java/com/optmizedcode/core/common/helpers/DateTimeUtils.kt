@@ -11,9 +11,8 @@ object DateTimeUtils {
 
     private const val ONE_DAY_IN_MILLIS = 86400000L
 
-    fun isDay(): Boolean {
-        val calendar = Calendar.getInstance()
-        return when (calendar[Calendar.HOUR_OF_DAY]) {
+    fun isDay(currentHour: Int = Calendar.getInstance()[Calendar.HOUR_OF_DAY]): Boolean {
+        return when (currentHour) {
             in 0..4 -> false
             in 5..17 -> true
             in 18..23 -> false
